@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Messages — SkillNova</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body { background: var(--bg); padding-top: 70px; }
+    .chat-layout { display: grid; grid-template-columns: 320px 1fr; height: calc(100vh - 70px); }
+
+    /* ---- Conversations List ---- */
+    .conv-panel { background: white; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+    .conv-header { padding: 20px; border-bottom: 1px solid var(--border); }
+    .conv-header h2 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--dark); margin-bottom: 12px; }
+    .search-wrap { position: relative; }
+    .search-wrap input { width: 100%; padding: 9px 14px 9px 36px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.88rem; color: var(--text); background: var(--bg); }
+    .search-wrap input:focus { border-color: var(--primary); outline: none; }
+    .search-wrap .s-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; }
+    .conv-list { flex: 1; overflow-y: auto; }
+    .conv-item { display: flex; align-items: center; gap: 12px; padding: 14px 20px; cursor: pointer; transition: var(--transition); border-bottom: 1px solid var(--bg); }
+    .conv-item:hover, .conv-item.active { background: var(--primary-light); }
+    .conv-avatar { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: white; flex-shrink: 0; position: relative; }
+    .conv-avatar .online-dot { position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; background: var(--success); border: 2px solid white; border-radius: 50%; }
+    .conv-info { flex: 1; min-width: 0; }
+    .conv-info h4 { font-size: 0.9rem; font-weight: 700; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .conv-info p { font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+    .conv-meta { text-align: right; flex-shrink: 0; }
+    .conv-meta .time { font-size: 0.72rem; color: var(--text-muted); }
+    .conv-meta .unread { width: 18px; height: 18px; background: var(--primary); color: white; border-radius: 50%; font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 4px; margin-left: auto; }
+
+    /* ---- Chat Window ---- */
+    .chat-window { display: flex; flex-direction: column; background: var(--bg); }
+    .chat-header { background: white; border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; gap: 14px; }
+    .chat-header-avatar { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1rem; font-weight: 800; color: white; }
+    .chat-header-info h4 { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; color: var(--dark); }
+    .chat-header-info p { font-size: 0.78rem; color: var(--success); }
+    .chat-header-actions { margin-left: auto; display: flex; gap: 8px; }
+    .icon-btn { width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); color: var(--text-muted); font-size: 0.9rem; }
+    .icon-btn:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+
+    /* ---- Messages ---- */
+    .messages-area { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+    .msg-group { display: flex; flex-direction: column; gap: 6px; }
+    .msg-group.mine { align-items: flex-end; }
+    .msg-group.theirs { align-items: flex-start; }
+    .msg-sender { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 2px; padding: 0 4px; }
+    .msg-bubble { max-width: 70%; padding: 10px 14px; border-radius: 16px; font-size: 0.88rem; line-height: 1.5; }
+    .msg-group.mine .msg-bubble { background: var(--primary); color: white; border-bottom-right-radius: 4px; }
+    .msg-group.theirs .msg-bubble { background: white; color: var(--text); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+    .msg-time { font-size: 0.7rem; color: var(--text-muted); padding: 0 4px; }
+    .date-divider { text-align: center; font-size: 0.75rem; color: var(--text-muted); font-weight: 600; padding: 8px 0; position: relative; }
+    .date-divider::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--border); }
+    .date-divider span { background: var(--bg); padding: 0 12px; position: relative; }
+
+    /* Job Card in Chat */
+    .job-card-msg { background: white; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px; max-width: 280px; }
+    .job-card-msg h4 { font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+    .job-card-msg p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; }
+    .job-card-msg .jc-btns { display: flex; gap: 8px; }
+    .jc-btn { flex: 1; padding: 7px; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 700; cursor: pointer; border: none; transition: var(--transition); }
+    .jc-accept { background: var(--success); color: white; }
+    .jc-decline { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); }
+    .jc-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    /* ---- Input Area ---- */
+    .chat-input-area { background: white; border-top: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; gap: 12px; }
+    .chat-input-wrap { flex: 1; background: var(--bg); border: 1.5px solid var(--border); border-radius: 50px; display: flex; align-items: center; padding: 8px 16px; gap: 10px; transition: var(--transition); }
+    .chat-input-wrap:focus-within { border-color: var(--primary); background: white; }
+    .chat-input-wrap input { flex: 1; background: none; border: none; font-size: 0.92rem; color: var(--text); font-family: var(--font-body); }
+    .chat-input-wrap input::placeholder { color: var(--text-muted); }
+    .send-btn { width: 42px; height: 42px; background: var(--primary); border-radius: 50%; border: none; color: white; font-size: 1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); flex-shrink: 0; }
+    .send-btn:hover { background: var(--primary-dark); transform: scale(1.05); }
+
+    /* Empty state */
+    .empty-chat { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); gap: 12px; }
+    .empty-chat .e-icon { font-size: 3.5rem; }
+    .empty-chat h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--dark); }
+    .empty-chat p { font-size: 0.88rem; text-align: center; max-width: 280px; }
+
+    @media (max-width: 768px) { .chat-layout { grid-template-columns: 1fr; } .conv-panel { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-logo"><div class="nav-logo-icon">⚡</div>Skill<span>Nova</span></div>
+  <div style="display:flex;gap:10px">
+    <a href="dashboard.html" class="btn btn-outline" style="padding:7px 16px;font-size:0.85rem"><i class="fas fa-arrow-left"></i> Dashboard</a>
+  </div>
+</nav>
+
+<div class="chat-layout">
+
+  <!-- Conversations Panel -->
+  <div class="conv-panel">
+    <div class="conv-header">
+      <h2>💬 Messages</h2>
+      <div class="search-wrap">
+        <i class="fas fa-search s-icon"></i>
+        <input type="text" placeholder="Search conversations..." oninput="filterConvs(this.value)"/>
+      </div>
+    </div>
+    <div class="conv-list" id="convList"></div>
+  </div>
+
+  <!-- Chat Window -->
+  <div class="chat-window" id="chatWindow">
+    <div class="empty-chat" id="emptyChat">
+      <div class="e-icon">💬</div>
+      <h3>Your Messages</h3>
+      <p>Select a conversation from the left to start chatting with workers or employers.</p>
+    </div>
+    <!-- Chat content injected here -->
+  </div>
+
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="script.js"></script>
+<script>
+  const user = getUser();
+  let activeConv = null;
+
+  const conversations = [
+    { id: 1, name: 'Rajesh Kumar', role: 'Employer', avatar: 'R', color: '#1a6bff', online: true, job: 'Plumber Needed', budget: '₹800/day', messages: [
+      { from: 'them', text: 'Hello! I saw your profile on SkillNova. Are you available for a plumbing job?', time: '10:00 AM' },
+      { from: 'me', text: 'Yes sir, I am available! What kind of work is it?', time: '10:05 AM' },
+      { from: 'them', text: 'I need pipe repair work in my kitchen and bathroom. It will take 1-2 days.', time: '10:07 AM' },
+      { from: 'them', text: null, isJobCard: true, job: { title: 'Pipe Repair Work', desc: 'Kitchen & bathroom pipe repair · 1-2 days', budget: '₹800/day', location: 'Anna Nagar, Chennai' }, time: '10:08 AM' },
+      { from: 'me', text: 'I accept the job! I will be there tomorrow morning at 8 AM. 🙏', time: '10:15 AM' },
+    ]},
+    { id: 2, name: 'Meena Devi', role: 'Employer', avatar: 'M', color: '#e05520', online: true, job: 'House Painting', budget: '₹600/day', messages: [
+      { from: 'them', text: 'Hi, I need painting work for 2 rooms. Are you a painter?', time: 'Yesterday' },
+      { from: 'me', text: 'Yes! I have 5 years experience in house painting. I can do interior and exterior both.', time: 'Yesterday' },
+      { from: 'them', text: 'Great! What is your rate per day?', time: 'Yesterday' },
+      { from: 'me', text: 'My rate is ₹600 per day. I will finish 2 rooms in 3 days.', time: 'Yesterday' },
+      { from: 'them', text: 'That sounds good! Can you come this Saturday?', time: '9:30 AM' },
+    ]},
+    { id: 3, name: 'Suresh Babu', role: 'Worker', avatar: 'S', color: '#10b981', online: false, job: 'Skill Exchange', budget: null, messages: [
+      { from: 'them', text: 'Hi bro! I saw your skill exchange request. I can teach Carpentry if you teach me Plumbing.', time: 'Monday' },
+      { from: 'me', text: 'That is a great idea! I am good at plumbing. When can we start?', time: 'Monday' },
+      { from: 'them', text: 'This weekend works for me. Saturday morning?', time: 'Monday' },
+    ]},
+    { id: 4, name: 'Kumar Builders', role: 'Employer', avatar: 'K', color: '#7c3aed', online: false, job: 'Electrician Work', budget: '₹1,000/day', messages: [
+      { from: 'them', text: 'We have a big construction project. Need electricians for 2 weeks. Are you interested?', time: 'Sunday' },
+      { from: 'me', text: 'Yes I am interested! Please send me the job details.', time: 'Sunday' },
+    ]},
+  ];
+
+  function renderConversations(list) {
+    const convList = document.getElementById('convList');
+    convList.innerHTML = list.map(conv => {
+      const lastMsg = conv.messages[conv.messages.length - 1];
+      const lastText = lastMsg.isJobCard ? '📋 Job offer sent' : lastMsg.text;
+      return `
+        <div class="conv-item ${activeConv === conv.id ? 'active' : ''}" onclick="openChat(${conv.id})">
+          <div class="conv-avatar" style="background:${conv.color}">
+            ${conv.avatar}
+            ${conv.online ? '<div class="online-dot"></div>' : ''}
+          </div>
+          <div class="conv-info">
+            <h4>${conv.name}</h4>
+            <p>${lastText}</p>
+          </div>
+          <div class="conv-meta">
+            <div class="time">${lastMsg.time}</div>
+            ${conv.id <= 2 ? '<div class="unread">1</div>' : ''}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function filterConvs(val) {
+    const filtered = conversations.filter(c => c.name.toLowerCase().includes(val.toLowerCase()));
+    renderConversations(filtered);
+  }
+
+  function openChat(id) {
+    activeConv = id;
+    const conv = conversations.find(c => c.id === id);
+    renderConversations(conversations);
+    const win = document.getElementById('chatWindow');
+    win.innerHTML = `
+      <div class="chat-header">
+        <div class="chat-header-avatar" style="background:${conv.color}">${conv.avatar}</div>
+        <div class="chat-header-info">
+          <h4>${conv.name} <span style="font-size:0.75rem;font-weight:500;color:var(--text-muted)">(${conv.role})</span></h4>
+          <p>${conv.online ? '🟢 Online now' : '⚪ Last seen recently'}</p>
+        </div>
+        <div class="chat-header-actions">
+          <div class="icon-btn" onclick="showToast('Calling feature coming soon!','info')"><i class="fas fa-phone"></i></div>
+          <div class="icon-btn" onclick="showToast('Profile view coming soon!','info')"><i class="fas fa-user"></i></div>
+        </div>
+      </div>
+      <div class="messages-area" id="messagesArea">
+        <div class="date-divider"><span>Today</span></div>
+        ${conv.messages.map(msg => renderMessage(msg, conv)).join('')}
+      </div>
+      <div class="chat-input-area">
+        <div class="chat-input-wrap">
+          <i class="fas fa-smile" style="color:var(--text-muted);cursor:pointer" onclick="showToast('Emoji picker coming soon!','info')"></i>
+          <input type="text" id="msgInput" placeholder="Type a message..." onkeypress="handleMsgKey(event, ${conv.id})"/>
+          <i class="fas fa-paperclip" style="color:var(--text-muted);cursor:pointer" onclick="showToast('File sharing coming soon!','info')"></i>
+        </div>
+        <button class="send-btn" onclick="sendMessage(${conv.id})"><i class="fas fa-paper-plane"></i></button>
+      </div>`;
+    scrollToBottom();
+  }
+
+  function renderMessage(msg, conv) {
+    const isMe = msg.from === 'me';
+    if (msg.isJobCard) {
+      return `
+        <div class="msg-group theirs">
+          <div class="msg-sender">${conv.name}</div>
+          <div class="job-card-msg">
+            <h4>📋 ${msg.job.title}</h4>
+            <p>${msg.job.desc}<br/>💰 ${msg.job.budget} · 📍 ${msg.job.location}</p>
+            <div class="jc-btns">
+              <button class="jc-btn jc-accept" onclick="acceptJob('${msg.job.title}')">✅ Accept</button>
+              <button class="jc-btn jc-decline" onclick="showToast('Job declined','warning')">❌ Decline</button>
+            </div>
+          </div>
+          <div class="msg-time">${msg.time}</div>
+        </div>`;
+    }
+    return `
+      <div class="msg-group ${isMe ? 'mine' : 'theirs'}">
+        ${!isMe ? `<div class="msg-sender">${conv.name}</div>` : ''}
+        <div class="msg-bubble">${msg.text}</div>
+        <div class="msg-time">${msg.time}</div>
+      </div>`;
+  }
+
+  function sendMessage(convId) {
+    const input = document.getElementById('msgInput');
+    const text = input.value.trim();
+    if (!text) return;
+    const conv = conversations.find(c => c.id === convId);
+    const now = new Date();
+    const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0') + ' ' + (now.getHours() >= 12 ? 'PM' : 'AM');
+    conv.messages.push({ from: 'me', text, time });
+    input.value = '';
+    const area = document.getElementById('messagesArea');
+    area.innerHTML += renderMessage({ from: 'me', text, time }, conv);
+    scrollToBottom();
+    renderConversations(conversations);
+    // Simulate reply after 1.5s
+    setTimeout(() => {
+      const replies = [
+        'Got it! Thank you for the quick response. 🙏',
+        'Sure, that works for me!',
+        'Okay, I will confirm and get back to you.',
+        'Great! See you then.',
+        'Thank you! I appreciate your promptness.',
+      ];
+      const reply = replies[Math.floor(Math.random() * replies.length)];
+      conv.messages.push({ from: 'them', text: reply, time });
+      const area2 = document.getElementById('messagesArea');
+      if (area2) { area2.innerHTML += renderMessage({ from: 'them', text: reply, time }, conv); scrollToBottom(); }
+      renderConversations(conversations);
+    }, 1500);
+  }
+
+  function handleMsgKey(e, convId) { if (e.key === 'Enter') sendMessage(convId); }
+
+  function acceptJob(title) {
+    showToast(`✅ Job "${title}" accepted! Status set to Busy 🔴`, 'success');
+  }
+
+  function scrollToBottom() {
+    const area = document.getElementById('messagesArea');
+    if (area) setTimeout(() => area.scrollTop = area.scrollHeight, 50);
+  }
+
+  renderConversations(conversations);
+  // Auto open first conversation
+  setTimeout(() => openChat(1), 300);
+</script>
+</body>
+</html>

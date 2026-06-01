@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Post a Job — SkillNova</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body { background: var(--bg); padding-top: 70px; }
+    .jobpost-layout { max-width: 800px; margin: 0 auto; padding: 32px 24px; }
+    .jobpost-header { margin-bottom: 28px; }
+    .jobpost-header h1 { font-family: var(--font-display); font-size: 1.7rem; font-weight: 800; color: var(--dark); }
+    .jobpost-header p { color: var(--text-light); font-size: 0.9rem; margin-top: 6px; }
+    .form-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 20px; }
+    .form-card-header { padding: 18px 24px; border-bottom: 1px solid var(--border); }
+    .form-card-header h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+    .form-card-body { padding: 24px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    textarea { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.95rem; color: var(--text); background: white; transition: var(--transition); resize: vertical; font-family: var(--font-body); min-height: 100px; }
+    textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,107,255,0.1); outline: none; }
+    .urgency-opts { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+    .urgency-opt { padding: 8px 18px; border: 1.5px solid var(--border); border-radius: 50px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: var(--transition); background: white; color: var(--text); }
+    .urgency-opt:hover { border-color: var(--primary); color: var(--primary); }
+    .urgency-opt.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+    .urgency-opt.emergency.selected { border-color: var(--danger); background: rgba(239,68,68,0.08); color: var(--danger); }
+    .preview-card { background: linear-gradient(135deg, #f7f9fc, white); border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px; }
+    .preview-card h3 { font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+    .preview-job { display: flex; gap: 16px; align-items: flex-start; }
+    .preview-icon { width: 52px; height: 52px; background: var(--primary-light); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+    .preview-info h4 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--dark); }
+    .preview-info .preview-tags { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+    .preview-tag { font-size: 0.78rem; font-weight: 600; padding: 3px 10px; border-radius: 50px; background: var(--primary-light); color: var(--primary); }
+    .posted-jobs { display: flex; flex-direction: column; gap: 12px; }
+    .posted-job-item { display: flex; align-items: center; gap: 14px; padding: 16px; border: 1px solid var(--border); border-radius: var(--radius); }
+    .posted-job-item .pj-icon { width: 44px; height: 44px; background: var(--primary-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .posted-job-item .pj-info { flex: 1; }
+    .posted-job-item .pj-info h4 { font-size: 0.9rem; font-weight: 700; color: var(--dark); }
+    .posted-job-item .pj-info p { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    .pj-status { font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 50px; }
+    .pj-active { background: rgba(16,185,129,0.1); color: var(--success); }
+    .pj-pending { background: rgba(245,158,11,0.1); color: var(--warning); }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-logo"><div class="nav-logo-icon">⚡</div>Skill<span>Nova</span></div>
+  <div style="display:flex;gap:10px">
+    <a href="dashboard.html" class="btn btn-outline" style="padding:7px 16px;font-size:0.85rem"><i class="fas fa-arrow-left"></i> Dashboard</a>
+  </div>
+</nav>
+
+<div class="jobpost-layout">
+
+  <div class="jobpost-header">
+    <h1>📋 Post a New Job</h1>
+    <p>Fill in the details below. Our AI will match your job with the best available workers nearby.</p>
+  </div>
+
+  <!-- Job Details -->
+  <div class="form-card">
+    <div class="form-card-header"><h3>📝 Job Details</h3></div>
+    <div class="form-card-body">
+      <div class="form-group" style="margin-bottom:1.2rem">
+        <label>Job Title</label>
+        <div class="input-wrap">
+          <i class="fas fa-briefcase icon"></i>
+          <input type="text" id="jobTitle" placeholder="e.g. Need a Plumber for pipe repair" oninput="updatePreview()"/>
+        </div>
+      </div>
+      <div class="form-grid" style="margin-bottom:1.2rem">
+        <div class="form-group">
+          <label>Work Type / Skill Needed</label>
+          <div class="input-wrap">
+            <i class="fas fa-tools icon"></i>
+            <select id="jobType" onchange="updatePreview()">
+              <option value="">Select work type...</option>
+              <option>Plumber 🔧</option>
+              <option>Electrician ⚡</option>
+              <option>Carpenter 🪚</option>
+              <option>Painter 🎨</option>
+              <option>Mason 🧱</option>
+              <option>Driver 🚗</option>
+              <option>Mechanic 🔩</option>
+              <option>Gardener 🌿</option>
+              <option>Cook 👨‍🍳</option>
+              <option>Cleaner 🧹</option>
+              <option>Security 💂</option>
+              <option>Delivery 📦</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Budget (₹ per day)</label>
+          <div class="input-wrap">
+            <i class="fas fa-rupee-sign icon"></i>
+            <input type="number" id="jobBudget" placeholder="e.g. 800" oninput="updatePreview()"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Location</label>
+          <div class="input-wrap">
+            <i class="fas fa-map-marker-alt icon"></i>
+            <input type="text" id="jobLocation" placeholder="e.g. Madurai, Tamil Nadu" oninput="updatePreview()"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Duration</label>
+          <div class="input-wrap">
+            <i class="fas fa-calendar icon"></i>
+            <select id="jobDuration" onchange="updatePreview()">
+              <option value="">Select duration...</option>
+              <option>1 day</option>
+              <option>2-3 days</option>
+              <option>1 week</option>
+              <option>2 weeks</option>
+              <option>1 month</option>
+              <option>Ongoing</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:1.2rem">
+        <label>Job Description</label>
+        <textarea id="jobDesc" placeholder="Describe the work in detail... e.g. Need to repair a leaking pipe in kitchen and bathroom. Work needs to be done this week." oninput="updatePreview()"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Urgency Level</label>
+        <div class="urgency-opts">
+          <button class="urgency-opt selected" onclick="selectUrgency(this,'normal')">📋 Normal</button>
+          <button class="urgency-opt" onclick="selectUrgency(this,'today')">⏰ Today</button>
+          <button class="urgency-opt emergency" onclick="selectUrgency(this,'emergency')">🚨 Emergency</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Preview -->
+  <div class="preview-card">
+    <h3>👁️ Live Job Preview</h3>
+    <div class="preview-job">
+      <div class="preview-icon" id="prevIcon">📋</div>
+      <div class="preview-info">
+        <h4 id="prevTitle">Your job title will appear here...</h4>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-top:4px" id="prevDesc">Job description...</p>
+        <div class="preview-tags">
+          <span class="preview-tag" id="prevType">Work Type</span>
+          <span class="preview-tag" id="prevBudget">₹ Budget/day</span>
+          <span class="preview-tag" id="prevLoc">📍 Location</span>
+          <span class="preview-tag" id="prevDuration">Duration</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Matching Info -->
+  <div style="background:linear-gradient(135deg,rgba(26,107,255,0.05),rgba(26,107,255,0.1));border:1px solid rgba(26,107,255,0.2);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px">
+    <div style="display:flex;gap:12px;align-items:flex-start">
+      <span style="font-size:1.5rem">🤖</span>
+      <div>
+        <h4 style="font-family:var(--font-display);font-weight:700;color:var(--dark);margin-bottom:6px">AI Job Matching Active</h4>
+        <p style="font-size:0.85rem;color:var(--text-light);line-height:1.6">Once you post this job, our AI will automatically match it with the best available workers based on their skills, location, trust score, and availability. You'll see matched workers within minutes!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit -->
+  <button class="btn btn-primary btn-full btn-lg" id="postBtn" onclick="postJob()" style="margin-bottom:32px">
+    <i class="fas fa-paper-plane"></i> Post Job & Find Workers
+  </button>
+
+  <!-- Posted Jobs -->
+  <div class="form-card">
+    <div class="form-card-header"><h3>📂 Your Posted Jobs</h3></div>
+    <div class="form-card-body">
+      <div class="posted-jobs" id="postedJobsList">
+        <p style="text-align:center;color:var(--text-muted);font-size:0.88rem;padding:20px 0">No jobs posted yet. Post your first job above!</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="script.js"></script>
+<script>
+  let urgencyLevel = 'normal';
+  const workIcons = { 'Plumber 🔧':'🔧','Electrician ⚡':'⚡','Carpenter 🪚':'🪚','Painter 🎨':'🎨','Mason 🧱':'🧱','Driver 🚗':'🚗','Mechanic 🔩':'🔩','Gardener 🌿':'🌿','Cook 👨‍🍳':'👨‍🍳','Cleaner 🧹':'🧹','Security 💂':'💂','Delivery 📦':'📦','Other':'📋' };
+
+  function selectUrgency(btn, level) {
+    document.querySelectorAll('.urgency-opt').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    urgencyLevel = level;
+  }
+
+  function updatePreview() {
+    const title = document.getElementById('jobTitle').value || 'Your job title will appear here...';
+    const type = document.getElementById('jobType').value || 'Work Type';
+    const budget = document.getElementById('jobBudget').value;
+    const loc = document.getElementById('jobLocation').value || '📍 Location';
+    const dur = document.getElementById('jobDuration').value || 'Duration';
+    const desc = document.getElementById('jobDesc').value || 'Job description...';
+    document.getElementById('prevTitle').textContent = title;
+    document.getElementById('prevDesc').textContent = desc.substring(0, 80) + (desc.length > 80 ? '...' : '');
+    document.getElementById('prevType').textContent = type;
+    document.getElementById('prevBudget').textContent = budget ? '₹' + budget + '/day' : '₹ Budget/day';
+    document.getElementById('prevLoc').textContent = '📍 ' + loc;
+    document.getElementById('prevDuration').textContent = dur;
+    const iconKey = Object.keys(workIcons).find(k => type.includes(k.split(' ')[0]));
+    document.getElementById('prevIcon').textContent = iconKey ? workIcons[iconKey] : '📋';
+  }
+
+  function postJob() {
+    const title = document.getElementById('jobTitle').value.trim();
+    const type = document.getElementById('jobType').value;
+    const budget = document.getElementById('jobBudget').value.trim();
+    const loc = document.getElementById('jobLocation').value.trim();
+    const dur = document.getElementById('jobDuration').value;
+    const desc = document.getElementById('jobDesc').value.trim();
+    if (!title) { showToast('Please enter a job title', 'error'); return; }
+    if (!type) { showToast('Please select the work type', 'error'); return; }
+    if (!budget) { showToast('Please enter your budget', 'error'); return; }
+    if (!loc) { showToast('Please enter the job location', 'error'); return; }
+    if (!desc) { showToast('Please add a job description', 'error'); return; }
+    const btn = document.getElementById('postBtn');
+    btn.innerHTML = '<span class="spinner"></span> Posting & Matching Workers...';
+    btn.disabled = true;
+    setTimeout(() => {
+      // Save to localStorage
+      const jobs = JSON.parse(localStorage.getItem('sn_jobs') || '[]');
+      jobs.unshift({ id: Date.now(), title, type, budget, loc, dur, desc, urgency: urgencyLevel, status: 'active', posted: new Date().toLocaleDateString() });
+      localStorage.setItem('sn_jobs', JSON.stringify(jobs));
+      showToast('Job posted! AI is matching workers now 🤖', 'success');
+      btn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Job & Find Workers';
+      btn.disabled = false;
+      loadPostedJobs();
+      // Clear form
+      ['jobTitle','jobBudget','jobLocation','jobDesc'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('jobType').value = '';
+      document.getElementById('jobDuration').value = '';
+      updatePreview();
+    }, 2000);
+  }
+
+  function loadPostedJobs() {
+    const jobs = JSON.parse(localStorage.getItem('sn_jobs') || '[]');
+    const list = document.getElementById('postedJobsList');
+    if (jobs.length === 0) {
+      list.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-size:0.88rem;padding:20px 0">No jobs posted yet. Post your first job above!</p>';
+      return;
+    }
+    list.innerHTML = jobs.map(job => `
+      <div class="posted-job-item">
+        <div class="pj-icon">${workIcons[job.type] || '📋'}</div>
+        <div class="pj-info">
+          <h4>${job.title}</h4>
+          <p>${job.type} · ₹${job.budget}/day · 📍 ${job.loc} · ${job.posted}</p>
+        </div>
+        <span class="pj-status pj-active">✅ Active</span>
+      </div>`).join('');
+  }
+
+  loadPostedJobs();
+</script>
+</body>
+</html>

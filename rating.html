@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rate a Worker — SkillNova</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body { background: var(--bg); padding-top: 70px; }
+    .rating-layout { max-width: 800px; margin: 0 auto; padding: 32px 24px; }
+    .rating-header { margin-bottom: 28px; }
+    .rating-header h1 { font-family: var(--font-display); font-size: 1.7rem; font-weight: 800; color: var(--dark); }
+    .rating-header p { color: var(--text-light); font-size: 0.9rem; margin-top: 6px; }
+    .section-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 24px; }
+    .sc-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .sc-header h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+    .sc-body { padding: 24px; }
+
+    /* Worker Card */
+    .worker-card { display: flex; align-items: center; gap: 16px; padding: 18px; background: var(--bg); border-radius: var(--radius); margin-bottom: 24px; }
+    .worker-avatar { width: 60px; height: 60px; border-radius: 16px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: white; flex-shrink: 0; }
+    .worker-info h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--dark); }
+    .worker-info p { font-size: 0.82rem; color: var(--text-muted); margin-top: 3px; }
+    .worker-trust { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+    .trust-pill { font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 50px; }
+    .trust-pill.green { background: rgba(16,185,129,0.1); color: var(--success); }
+    .trust-pill.blue { background: var(--primary-light); color: var(--primary); }
+
+    /* Star Rating */
+    .star-rating-section { text-align: center; margin-bottom: 28px; }
+    .star-rating-section label { display: block; font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 14px; }
+    .stars-input { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
+    .star-btn { font-size: 2.2rem; cursor: pointer; transition: transform 0.15s ease; background: none; border: none; filter: grayscale(1) opacity(0.4); }
+    .star-btn.active { filter: none; }
+    .star-btn:hover { transform: scale(1.2); filter: none; }
+    .rating-label { font-size: 0.95rem; font-weight: 700; color: var(--text-muted); min-height: 24px; transition: var(--transition); }
+
+    /* Category Ratings */
+    .category-ratings { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
+    .cat-row { display: flex; align-items: center; gap: 12px; }
+    .cat-label { font-size: 0.85rem; font-weight: 600; color: var(--text); width: 130px; flex-shrink: 0; }
+    .cat-stars { display: flex; gap: 4px; }
+    .cat-star { font-size: 1.2rem; cursor: pointer; filter: grayscale(1) opacity(0.4); transition: var(--transition); }
+    .cat-star.active { filter: none; }
+    .cat-star:hover { transform: scale(1.15); filter: none; }
+
+    /* Badges */
+    .badges-section { margin-bottom: 24px; }
+    .badges-section label { display: block; font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+    .badges-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .badge-opt { padding: 7px 14px; border: 1.5px solid var(--border); border-radius: 50px; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: var(--transition); background: white; color: var(--text); }
+    .badge-opt:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+    .badge-opt.selected { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+
+    /* Success Screen */
+    .success-screen { display: none; text-align: center; padding: 40px 20px; }
+    .success-screen .s-icon { font-size: 4rem; margin-bottom: 16px; }
+    .success-screen h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
+    .success-screen p { color: var(--text-light); font-size: 0.9rem; margin-bottom: 24px; }
+    .trust-update { background: linear-gradient(135deg, #0d1117, #1a2744); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px; color: white; }
+    .trust-update h4 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
+    .trust-change { display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 1.4rem; font-weight: 800; }
+    .trust-change .arrow { color: var(--success); }
+
+    /* Past Ratings */
+    .past-rating-item { display: flex; gap: 14px; padding: 16px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; transition: var(--transition); }
+    .past-rating-item:hover { box-shadow: var(--shadow); }
+    .pr-avatar { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1rem; font-weight: 800; color: white; flex-shrink: 0; }
+    .pr-info { flex: 1; }
+    .pr-info h4 { font-size: 0.9rem; font-weight: 700; color: var(--dark); }
+    .pr-info p { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    .pr-stars { font-size: 0.9rem; color: #f59e0b; margin-top: 4px; }
+    .pr-right { text-align: right; flex-shrink: 0; }
+    .pr-right .pr-date { font-size: 0.75rem; color: var(--text-muted); }
+    .pr-right .pr-amount { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; color: var(--primary); margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-logo"><div class="nav-logo-icon">⚡</div>Skill<span>Nova</span></div>
+  <div style="display:flex;gap:10px">
+    <a href="dashboard.html" class="btn btn-outline" style="padding:7px 16px;font-size:0.85rem"><i class="fas fa-arrow-left"></i> Dashboard</a>
+  </div>
+</nav>
+
+<div class="rating-layout">
+
+  <div class="rating-header">
+    <h1>⭐ Rate a Worker</h1>
+    <p>Your honest rating helps build trust and improves the SkillNova community for everyone.</p>
+  </div>
+
+  <!-- Rating Form -->
+  <div class="section-card" id="ratingFormCard">
+    <div class="sc-header"><h3>📝 Submit Your Rating</h3></div>
+    <div class="sc-body">
+
+      <!-- Worker Being Rated -->
+      <div class="worker-card">
+        <div class="worker-avatar">R</div>
+        <div class="worker-info">
+          <h3>Ravi Kumar</h3>
+          <p>Plumber · Completed: Pipe Repair Work · May 20, 2025</p>
+          <div class="worker-trust">
+            <span class="trust-pill green">⭐ Trust: 72/100</span>
+            <span class="trust-pill blue">✅ Verified</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overall Star Rating -->
+      <div class="star-rating-section">
+        <label>Overall Rating — How was your experience?</label>
+        <div class="stars-input" id="starsInput">
+          <button class="star-btn" onclick="setRating(1)">⭐</button>
+          <button class="star-btn" onclick="setRating(2)">⭐</button>
+          <button class="star-btn" onclick="setRating(3)">⭐</button>
+          <button class="star-btn" onclick="setRating(4)">⭐</button>
+          <button class="star-btn" onclick="setRating(5)">⭐</button>
+        </div>
+        <div class="rating-label" id="ratingLabel">Tap a star to rate</div>
+      </div>
+
+      <!-- Category Ratings -->
+      <div class="category-ratings">
+        <div class="cat-row">
+          <span class="cat-label">⏰ Punctuality</span>
+          <div class="cat-stars" id="cat-0">
+            <span class="cat-star" onclick="setCatRating(0,1)">⭐</span><span class="cat-star" onclick="setCatRating(0,2)">⭐</span><span class="cat-star" onclick="setCatRating(0,3)">⭐</span><span class="cat-star" onclick="setCatRating(0,4)">⭐</span><span class="cat-star" onclick="setCatRating(0,5)">⭐</span>
+          </div>
+        </div>
+        <div class="cat-row">
+          <span class="cat-label">🛠️ Work Quality</span>
+          <div class="cat-stars" id="cat-1">
+            <span class="cat-star" onclick="setCatRating(1,1)">⭐</span><span class="cat-star" onclick="setCatRating(1,2)">⭐</span><span class="cat-star" onclick="setCatRating(1,3)">⭐</span><span class="cat-star" onclick="setCatRating(1,4)">⭐</span><span class="cat-star" onclick="setCatRating(1,5)">⭐</span>
+          </div>
+        </div>
+        <div class="cat-row">
+          <span class="cat-label">💬 Communication</span>
+          <div class="cat-stars" id="cat-2">
+            <span class="cat-star" onclick="setCatRating(2,1)">⭐</span><span class="cat-star" onclick="setCatRating(2,2)">⭐</span><span class="cat-star" onclick="setCatRating(2,3)">⭐</span><span class="cat-star" onclick="setCatRating(2,4)">⭐</span><span class="cat-star" onclick="setCatRating(2,5)">⭐</span>
+          </div>
+        </div>
+        <div class="cat-row">
+          <span class="cat-label">💰 Value for Money</span>
+          <div class="cat-stars" id="cat-3">
+            <span class="cat-star" onclick="setCatRating(3,1)">⭐</span><span class="cat-star" onclick="setCatRating(3,2)">⭐</span><span class="cat-star" onclick="setCatRating(3,3)">⭐</span><span class="cat-star" onclick="setCatRating(3,4)">⭐</span><span class="cat-star" onclick="setCatRating(3,5)">⭐</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <div class="badges-section">
+        <label>🏆 Award a Badge (optional)</label>
+        <div class="badges-grid">
+          <div class="badge-opt" onclick="toggleBadge(this)">⚡ Fast Worker</div>
+          <div class="badge-opt" onclick="toggleBadge(this)">💎 High Quality</div>
+          <div class="badge-opt" onclick="toggleBadge(this)">😊 Very Friendly</div>
+          <div class="badge-opt" onclick="toggleBadge(this)">⏰ Always On Time</div>
+          <div class="badge-opt" onclick="toggleBadge(this)">💰 Fair Price</div>
+          <div class="badge-opt" onclick="toggleBadge(this)">🔄 Would Hire Again</div>
+          <div class="badge-opt" onclick="toggleBadge(this)">🧹 Left Place Clean</div>
+          <div class="badge-opt" onclick="toggleBadge(this)">🤝 Very Professional</div>
+        </div>
+      </div>
+
+      <!-- Written Review -->
+      <div class="form-group" style="margin-bottom:20px">
+        <label>✍️ Written Review (optional)</label>
+        <textarea id="reviewText" placeholder="Share your experience... e.g. Ravi did an excellent job fixing our pipes. Very professional and completed work on time!"></textarea>
+      </div>
+
+      <!-- Would Hire Again -->
+      <div class="form-group" style="margin-bottom:24px">
+        <label style="font-size:0.88rem;font-weight:700;color:var(--text);display:block;margin-bottom:10px">Would you hire this worker again?</label>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-outline" id="hireYes" onclick="setHireAgain(true)" style="flex:1">👍 Yes, definitely!</button>
+          <button class="btn btn-outline" id="hireNo" onclick="setHireAgain(false)" style="flex:1">👎 No, probably not</button>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-full btn-lg" id="submitRatingBtn" onclick="submitRating()">
+        <i class="fas fa-star"></i> Submit Rating
+      </button>
+    </div>
+
+    <!-- Success Screen -->
+    <div class="success-screen" id="successScreen">
+      <div class="s-icon">🎉</div>
+      <h2>Rating Submitted!</h2>
+      <p>Thank you! Your rating helps build a better community on SkillNova.</p>
+      <div class="trust-update">
+        <h4>🤖 AI Trust Score Updated</h4>
+        <div class="trust-change">
+          <span>72</span>
+          <span class="arrow">→</span>
+          <span style="color:var(--success)" id="newTrustScore">77</span>
+          <span style="font-size:0.9rem;color:rgba(255,255,255,0.6)">/100</span>
+        </div>
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.5);margin-top:8px">Ravi's trust score increased by <span id="trustIncrease">+5</span> points!</p>
+      </div>
+      <a href="dashboard.html" class="btn btn-primary btn-lg">
+        <i class="fas fa-home"></i> Back to Dashboard
+      </a>
+    </div>
+  </div>
+
+  <!-- Past Ratings Given -->
+  <div class="section-card">
+    <div class="sc-header"><h3>📋 Ratings You've Given</h3></div>
+    <div class="sc-body">
+      <div class="past-rating-item">
+        <div class="pr-avatar" style="background:#1a6bff">R</div>
+        <div class="pr-info"><h4>Ravi Kumar — Plumber</h4><p>Pipe Repair · Anna Nagar</p><div class="pr-stars">⭐⭐⭐⭐⭐</div></div>
+        <div class="pr-right"><div class="pr-date">May 20, 2025</div><div class="pr-amount">₹1,600</div></div>
+      </div>
+      <div class="past-rating-item">
+        <div class="pr-avatar" style="background:#10b981">K</div>
+        <div class="pr-info"><h4>Kumar — Electrician</h4><p>House Wiring · Coimbatore</p><div class="pr-stars">⭐⭐⭐⭐⭐</div></div>
+        <div class="pr-right"><div class="pr-date">May 10, 2025</div><div class="pr-amount">₹5,000</div></div>
+      </div>
+      <div class="past-rating-item">
+        <div class="pr-avatar" style="background:#e05520">M</div>
+        <div class="pr-info"><h4>Murugan — Painter</h4><p>Interior Painting · Madurai</p><div class="pr-stars">⭐⭐⭐⭐</div></div>
+        <div class="pr-right"><div class="pr-date">Apr 28, 2025</div><div class="pr-amount">₹1,800</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="script.js"></script>
+<script>
+  let currentRating = 0;
+  let hireAgain = null;
+  const ratingLabels = ['', '😞 Poor', '😐 Fair', '🙂 Good', '😊 Very Good', '🤩 Excellent!'];
+
+  function setRating(val) {
+    currentRating = val;
+    const stars = document.querySelectorAll('#starsInput .star-btn');
+    stars.forEach((s, i) => s.classList.toggle('active', i < val));
+    document.getElementById('ratingLabel').textContent = ratingLabels[val];
+    document.getElementById('ratingLabel').style.color = val >= 4 ? 'var(--success)' : val >= 3 ? 'var(--warning)' : 'var(--danger)';
+  }
+
+  function setCatRating(catIndex, val) {
+    const stars = document.querySelectorAll(`#cat-${catIndex} .cat-star`);
+    stars.forEach((s, i) => s.classList.toggle('active', i < val));
+  }
+
+  function toggleBadge(el) { el.classList.toggle('selected'); }
+
+  function setHireAgain(val) {
+    hireAgain = val;
+    document.getElementById('hireYes').style.background = val ? 'var(--success)' : 'white';
+    document.getElementById('hireYes').style.color = val ? 'white' : '';
+    document.getElementById('hireNo').style.background = !val ? 'var(--danger)' : 'white';
+    document.getElementById('hireNo').style.color = !val ? 'white' : '';
+  }
+
+  function submitRating() {
+    if (!currentRating) { showToast('Please select a star rating first!', 'error'); return; }
+    const btn = document.getElementById('submitRatingBtn');
+    btn.innerHTML = '<span class="spinner"></span> Submitting...';
+    btn.disabled = true;
+    setTimeout(() => {
+      const increase = currentRating >= 4 ? 5 : currentRating === 3 ? 2 : 0;
+      const newScore = Math.min(100, 72 + increase);
+      document.getElementById('newTrustScore').textContent = newScore;
+      document.getElementById('trustIncrease').textContent = '+' + increase;
+      document.querySelector('.sc-body').style.display = 'none';
+      document.getElementById('successScreen').style.display = 'block';
+      showToast('Rating submitted! Trust score updated 🎉', 'success');
+      // Update user trust score
+      const user = getUser();
+      if (user) { user.trustScore = newScore; localStorage.setItem('sn_user', JSON.stringify(user)); }
+    }, 1800);
+  }
+</script>
+</body>
+</html>

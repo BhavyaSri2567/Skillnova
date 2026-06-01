@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Skill Exchange — SkillNova</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body { background: var(--bg); padding-top: 70px; }
+    .se-layout { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+    .se-hero { background: linear-gradient(135deg, #0d1117, #1a2744); border-radius: var(--radius-lg); padding: 36px; margin-bottom: 28px; text-align: center; color: white; position: relative; overflow: hidden; }
+    .se-hero::before { content: ''; position: absolute; top: -80px; left: -80px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(26,107,255,0.15), transparent 70%); border-radius: 50%; }
+    .se-hero::after { content: ''; position: absolute; bottom: -60px; right: -60px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(255,107,43,0.1), transparent 70%); border-radius: 50%; }
+    .se-hero h1 { font-family: var(--font-display); font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; position: relative; z-index: 1; }
+    .se-hero p { color: rgba(255,255,255,0.6); font-size: 0.95rem; max-width: 500px; margin: 0 auto 24px; line-height: 1.7; position: relative; z-index: 1; }
+    .se-hero-stats { display: flex; justify-content: center; gap: 32px; position: relative; z-index: 1; }
+    .se-stat h3 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; }
+    .se-stat p { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
+    .section-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 24px; }
+    .sc-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .sc-header h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+    .sc-body { padding: 24px; }
+    /* Exchange Cards */
+    .exchange-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+    .exchange-card { border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 20px; transition: var(--transition); cursor: pointer; position: relative; overflow: hidden; }
+    .exchange-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--primary), var(--accent)); transform: scaleX(0); transition: var(--transition); }
+    .exchange-card:hover { border-color: var(--primary); box-shadow: var(--shadow); transform: translateY(-4px); }
+    .exchange-card:hover::before { transform: scaleX(1); }
+    .ec-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .ec-avatar { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: white; flex-shrink: 0; }
+    .ec-name { font-size: 0.9rem; font-weight: 700; color: var(--dark); }
+    .ec-loc { font-size: 0.75rem; color: var(--text-muted); margin-top: 1px; }
+    .ec-skills { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .ec-skill { background: var(--primary-light); color: var(--primary); font-size: 0.8rem; font-weight: 700; padding: 5px 12px; border-radius: 50px; }
+    .ec-arrow { color: var(--text-muted); font-size: 0.8rem; }
+    .ec-want { background: rgba(255,107,43,0.1); color: var(--accent); font-size: 0.8rem; font-weight: 700; padding: 5px 12px; border-radius: 50px; }
+    .ec-footer { display: flex; align-items: center; justify-content: space-between; }
+    .ec-time { font-size: 0.75rem; color: var(--text-muted); }
+    .ec-rating { font-size: 0.78rem; font-weight: 600; color: #f59e0b; }
+    /* My Request Form */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .request-card { border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 20px; display: flex; gap: 14px; align-items: flex-start; transition: var(--transition); }
+    .request-card:hover { border-color: var(--primary); box-shadow: var(--shadow); }
+    .req-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .req-info { flex: 1; }
+    .req-info h4 { font-size: 0.9rem; font-weight: 700; color: var(--dark); }
+    .req-info p { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    .req-status { font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 50px; margin-top: 6px; display: inline-block; }
+    .status-pending { background: rgba(245,158,11,0.1); color: var(--warning); }
+    .status-active { background: rgba(16,185,129,0.1); color: var(--success); }
+    select { width: 100%; padding: 11px 14px 11px 40px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.95rem; color: var(--text); background: white; transition: var(--transition); appearance: none; font-family: var(--font-body); }
+    select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(26,107,255,0.1); }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } .se-hero-stats { gap: 20px; } }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-logo"><div class="nav-logo-icon">⚡</div>Skill<span>Nova</span></div>
+  <div style="display:flex;gap:10px">
+    <a href="dashboard.html" class="btn btn-outline" style="padding:7px 16px;font-size:0.85rem"><i class="fas fa-arrow-left"></i> Dashboard</a>
+  </div>
+</nav>
+
+<div class="se-layout">
+
+  <!-- Hero -->
+  <div class="se-hero">
+    <h1>🤝 Peer Skill Exchange</h1>
+    <p>Teach one skill, learn another! Connect with fellow workers, share knowledge, and grow together — completely free.</p>
+    <div class="se-hero-stats">
+      <div class="se-stat"><h3>124</h3><p>Active Exchanges</p></div>
+      <div class="se-stat"><h3>48</h3><p>Skills Available</p></div>
+      <div class="se-stat"><h3>89%</h3><p>Success Rate</p></div>
+    </div>
+  </div>
+
+  <!-- Post Exchange Request -->
+  <div class="section-card">
+    <div class="sc-header"><h3>➕ Post Your Exchange Request</h3></div>
+    <div class="sc-body">
+      <div class="form-row" style="margin-bottom:16px">
+        <div class="form-group">
+          <label>I can TEACH this skill</label>
+          <div class="input-wrap">
+            <i class="fas fa-chalkboard-teacher icon"></i>
+            <select id="teachSkill">
+              <option value="">Select skill you can teach...</option>
+              <option>Plumbing 🔧</option><option>Electrician ⚡</option>
+              <option>Carpentry 🪚</option><option>Painting 🎨</option>
+              <option>Welding 🔥</option><option>Masonry 🧱</option>
+              <option>Driving 🚗</option><option>Cooking 👨‍🍳</option>
+              <option>Tailoring ✂️</option><option>Gardening 🌿</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>I want to LEARN this skill</label>
+          <div class="input-wrap">
+            <i class="fas fa-graduation-cap icon"></i>
+            <select id="learnSkill">
+              <option value="">Select skill you want to learn...</option>
+              <option>Plumbing 🔧</option><option>Electrician ⚡</option>
+              <option>Carpentry 🪚</option><option>Painting 🎨</option>
+              <option>Welding 🔥</option><option>Masonry 🧱</option>
+              <option>Driving 🚗</option><option>Cooking 👨‍🍳</option>
+              <option>Tailoring ✂️</option><option>Gardening 🌿</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Available Time</label>
+          <div class="input-wrap">
+            <i class="fas fa-clock icon"></i>
+            <select id="availTime">
+              <option value="">Select availability...</option>
+              <option>Weekday mornings (6AM–10AM)</option>
+              <option>Weekday evenings (6PM–9PM)</option>
+              <option>Saturday full day</option>
+              <option>Sunday full day</option>
+              <option>Flexible / Any time</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Your Location</label>
+          <div class="input-wrap">
+            <i class="fas fa-map-marker-alt icon"></i>
+            <input type="text" id="seLocation" placeholder="e.g. Madurai, Tamil Nadu"/>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-lg" onclick="postExchange()">
+        <i class="fas fa-handshake"></i> Post Exchange Request
+      </button>
+    </div>
+  </div>
+
+  <!-- Available Exchanges -->
+  <div class="section-card">
+    <div class="sc-header">
+      <h3>🔍 Available Exchange Requests Near You</h3>
+      <span style="font-size:0.82rem;color:var(--primary);font-weight:600">12 near you</span>
+    </div>
+    <div class="sc-body">
+      <div class="exchange-grid" id="exchangeGrid">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- My Active Exchanges -->
+  <div class="section-card">
+    <div class="sc-header"><h3>📅 My Exchange Sessions</h3></div>
+    <div class="sc-body">
+      <div style="display:flex;flex-direction:column;gap:12px" id="myExchanges">
+        <div class="request-card">
+          <div class="req-icon">🔧</div>
+          <div class="req-info">
+            <h4>Plumbing ↔ Carpentry with Suresh Babu</h4>
+            <p>Saturday 8AM–12PM · Near Madurai Bus Stand</p>
+            <span class="req-status status-active">🟢 Confirmed</span>
+          </div>
+          <button class="btn btn-outline" style="padding:6px 14px;font-size:0.82rem;flex-shrink:0" onclick="showToast('Chat opened with Suresh!','success')">
+            <i class="fas fa-comment"></i> Chat
+          </button>
+        </div>
+        <div class="request-card">
+          <div class="req-icon">⚡</div>
+          <div class="req-info">
+            <h4>Electrical ↔ Welding with Ravi Shankar</h4>
+            <p>Sunday 9AM–1PM · Online video call</p>
+            <span class="req-status status-pending">⏳ Awaiting Confirmation</span>
+          </div>
+          <button class="btn btn-outline" style="padding:6px 14px;font-size:0.82rem;flex-shrink:0" onclick="showToast('Reminder sent to Ravi!','info')">
+            <i class="fas fa-bell"></i> Remind
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="script.js"></script>
+<script>
+  const exchangeData = [
+    { name: 'Ravi Shankar', avatar: 'R', color: '#1a6bff', loc: '1.2km · Madurai', teaches: 'Carpentry 🪚', wants: 'Plumbing 🔧', time: 'Weekends', rating: '⭐ 4.9' },
+    { name: 'Priya Devi', avatar: 'P', color: '#e05520', loc: '2.5km · Salem', teaches: 'Tailoring ✂️', wants: 'Cooking 👨‍🍳', time: 'Evenings', rating: '⭐ 4.7' },
+    { name: 'Murugan K', avatar: 'M', color: '#10b981', loc: '3.1km · Dindigul', teaches: 'Welding 🔥', wants: 'Electrician ⚡', time: 'Saturday', rating: '⭐ 4.8' },
+    { name: 'Anbu Raj', avatar: 'A', color: '#7c3aed', loc: '4.2km · Virudhunagar', teaches: 'Masonry 🧱', wants: 'Carpentry 🪚', time: 'Flexible', rating: '⭐ 4.6' },
+    { name: 'Lakshmi S', avatar: 'L', color: '#db2777', loc: '2.8km · Madurai', teaches: 'Cooking 👨‍🍳', wants: 'Gardening 🌿', time: 'Mornings', rating: '⭐ 5.0' },
+    { name: 'Vijay Kumar', avatar: 'V', color: '#d97706', loc: '5.0km · Theni', teaches: 'Driving 🚗', wants: 'Plumbing 🔧', time: 'Sundays', rating: '⭐ 4.5' },
+  ];
+
+  const grid = document.getElementById('exchangeGrid');
+  exchangeData.forEach(ex => {
+    grid.innerHTML += `
+      <div class="exchange-card" onclick="connectExchange('${ex.name}')">
+        <div class="ec-top">
+          <div class="ec-avatar" style="background:${ex.color}">${ex.avatar}</div>
+          <div><div class="ec-name">${ex.name}</div><div class="ec-loc">📍 ${ex.loc}</div></div>
+        </div>
+        <div class="ec-skills">
+          <span class="ec-skill">Teaches: ${ex.teaches}</span>
+          <span class="ec-arrow">↔</span>
+          <span class="ec-want">Wants: ${ex.wants}</span>
+        </div>
+        <div class="ec-footer">
+          <span class="ec-time">🕐 ${ex.time}</span>
+          <span class="ec-rating">${ex.rating}</span>
+        </div>
+      </div>`;
+  });
+
+  function connectExchange(name) {
+    showToast(`Connection request sent to ${name}! 🤝`, 'success');
+  }
+
+  function postExchange() {
+    const teach = document.getElementById('teachSkill').value;
+    const learn = document.getElementById('learnSkill').value;
+    const time = document.getElementById('availTime').value;
+    const loc = document.getElementById('seLocation').value.trim();
+    if (!teach) { showToast('Please select a skill you can teach', 'error'); return; }
+    if (!learn) { showToast('Please select a skill you want to learn', 'error'); return; }
+    if (!time) { showToast('Please select your availability', 'error'); return; }
+    if (!loc) { showToast('Please enter your location', 'error'); return; }
+    if (teach === learn) { showToast('Teaching and learning skill cannot be the same!', 'warning'); return; }
+    showToast(`Exchange request posted! ${teach} ↔ ${learn} 🎉`, 'success');
+    document.getElementById('teachSkill').value = '';
+    document.getElementById('learnSkill').value = '';
+    document.getElementById('availTime').value = '';
+    document.getElementById('seLocation').value = '';
+  }
+</script>
+</body>
+</html>

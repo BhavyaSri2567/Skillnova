@@ -1,0 +1,12 @@
+# Dependencies
+server/node_modules/
+
+# Secret keys — NEVER upload this!
+server/.env
+
+# Database file
+server/skillnova.db
+
+# System files
+.DS_Store
+Thumbs.db

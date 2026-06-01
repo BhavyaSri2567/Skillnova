@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile — SkillNova</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body { background: var(--bg); padding-top: 70px; }
+    .profile-layout { max-width: 800px; margin: 0 auto; padding: 32px 24px; }
+    .profile-hero { background: linear-gradient(135deg, #0d1117, #1a2744); border-radius: var(--radius-lg); padding: 32px; margin-bottom: 24px; display: flex; align-items: center; gap: 24px; color: white; position: relative; overflow: hidden; }
+    .profile-hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(26,107,255,0.2), transparent 70%); border-radius: 50%; }
+    .profile-avatar-big { width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: white; flex-shrink: 0; position: relative; z-index: 1; }
+    .profile-hero-info { position: relative; z-index: 1; }
+    .profile-hero-info h2 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; }
+    .profile-hero-info p { color: rgba(255,255,255,0.6); font-size: 0.88rem; margin-top: 4px; }
+    .profile-badges { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .pbadge { font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 50px; }
+    .pbadge-blue { background: rgba(26,107,255,0.2); color: #7eb3ff; border: 1px solid rgba(26,107,255,0.3); }
+    .pbadge-green { background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+    .pbadge-orange { background: rgba(255,107,43,0.2); color: #fb923c; border: 1px solid rgba(255,107,43,0.3); }
+    .profile-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 20px; }
+    .profile-card-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .profile-card-header h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+    .profile-card-body { padding: 24px; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .info-item label { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 5px; }
+    .info-item .info-val { font-size: 0.92rem; font-weight: 600; color: var(--dark); }
+    .skills-display { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skill-pill { background: var(--primary-light); color: var(--primary); font-size: 0.82rem; font-weight: 600; padding: 5px 14px; border-radius: 50px; }
+    .trust-section { display: flex; align-items: center; gap: 16px; }
+    .trust-circle { width: 80px; height: 80px; border-radius: 50%; background: conic-gradient(var(--success) 0% 72%, var(--border) 72% 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .trust-inner { width: 60px; height: 60px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--success); }
+    .trust-info h4 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--dark); }
+    .trust-info p { font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; }
+    .trust-tips { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+    .trust-tip { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--text-light); }
+    .edit-form { display: none; }
+    .edit-form.active { display: block; }
+    .view-mode.hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-logo"><div class="nav-logo-icon">⚡</div>Skill<span>Nova</span></div>
+  <div style="display:flex;gap:10px">
+    <a href="dashboard.html" class="btn btn-outline" style="padding:7px 16px;font-size:0.85rem"><i class="fas fa-arrow-left"></i> Dashboard</a>
+  </div>
+</nav>
+
+<div class="profile-layout">
+
+  <!-- Profile Hero -->
+  <div class="profile-hero">
+    <div class="profile-avatar-big" id="profileAvatar">R</div>
+    <div class="profile-hero-info">
+      <h2 id="profileName">Loading...</h2>
+      <p id="profileLocation">📍 Location</p>
+      <div class="profile-badges">
+        <span class="pbadge pbadge-green" id="profileRoleBadge">👷 Worker</span>
+        <span class="pbadge pbadge-blue">✅ Verified</span>
+        <span class="pbadge pbadge-orange">⭐ Trust: <span id="profileTrust">72</span>/100</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trust Score -->
+  <div class="profile-card">
+    <div class="profile-card-header"><h3>⭐ AI Trust Score</h3></div>
+    <div class="profile-card-body">
+      <div class="trust-section">
+        <div class="trust-circle"><div class="trust-inner" id="trustNum">72</div></div>
+        <div class="trust-info">
+          <h4>Good Trust Level</h4>
+          <p>Your profile is verified and trustworthy. Complete more jobs to increase your score!</p>
+          <div class="trust-tips">
+            <div class="trust-tip"><span style="color:var(--success)">✅</span> Profile complete</div>
+            <div class="trust-tip"><span style="color:var(--success)">✅</span> Phone verified</div>
+            <div class="trust-tip"><span style="color:var(--warning)">⏳</span> Complete 5 jobs to reach 85+</div>
+            <div class="trust-tip"><span style="color:var(--warning)">⏳</span> Add work photos to reach 90+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Basic Info -->
+  <div class="profile-card">
+    <div class="profile-card-header">
+      <h3>👤 Personal Information</h3>
+      <button class="btn btn-outline" style="padding:6px 14px;font-size:0.82rem" onclick="toggleEdit()">
+        <i class="fas fa-edit"></i> <span id="editBtnText">Edit</span>
+      </button>
+    </div>
+    <div class="profile-card-body">
+
+      <!-- View Mode -->
+      <div class="view-mode" id="viewMode">
+        <div class="info-grid">
+          <div class="info-item"><label>Full Name</label><div class="info-val" id="infoName">—</div></div>
+          <div class="info-item"><label>Mobile</label><div class="info-val" id="infoPhone">—</div></div>
+          <div class="info-item"><label>Email</label><div class="info-val" id="infoEmail">—</div></div>
+          <div class="info-item"><label>Location</label><div class="info-val" id="infoLoc">—</div></div>
+          <div class="info-item"><label>Daily Rate</label><div class="info-val" id="infoRate">—</div></div>
+          <div class="info-item"><label>Account Type</label><div class="info-val" id="infoRole">—</div></div>
+        </div>
+      </div>
+
+      <!-- Edit Mode -->
+      <div class="edit-form" id="editForm">
+        <div class="info-grid" style="margin-bottom:16px">
+          <div class="form-group"><label>Full Name</label><div class="input-wrap"><i class="fas fa-user icon"></i><input type="text" id="editName" placeholder="Your full name"/></div></div>
+          <div class="form-group"><label>Mobile Number</label><div class="input-wrap"><i class="fas fa-phone icon"></i><input type="tel" id="editPhone" placeholder="10-digit number"/></div></div>
+          <div class="form-group"><label>Email</label><div class="input-wrap"><i class="fas fa-envelope icon"></i><input type="email" id="editEmail" placeholder="email@example.com"/></div></div>
+          <div class="form-group"><label>Location</label><div class="input-wrap"><i class="fas fa-map-marker-alt icon"></i><input type="text" id="editLocation" placeholder="City, State"/></div></div>
+          <div class="form-group"><label>Daily Rate (₹)</label><div class="input-wrap"><i class="fas fa-rupee-sign icon"></i><input type="number" id="editRate" placeholder="e.g. 600"/></div></div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-primary" onclick="saveProfile()"><i class="fas fa-save"></i> Save Changes</button>
+          <button class="btn btn-outline" onclick="toggleEdit()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skills -->
+  <div class="profile-card">
+    <div class="profile-card-header"><h3>🛠️ My Skills</h3></div>
+    <div class="profile-card-body">
+      <div class="skills-display" id="skillsDisplay">
+        <span style="color:var(--text-muted);font-size:0.88rem">No skills added yet. Update your profile!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Portfolio Placeholder -->
+  <div class="profile-card">
+    <div class="profile-card-header"><h3>📁 Work Portfolio</h3></div>
+    <div class="profile-card-body" style="text-align:center;padding:40px">
+      <div style="font-size:3rem;margin-bottom:12px">📸</div>
+      <h4 style="font-family:var(--font-display);font-weight:700;color:var(--dark);margin-bottom:8px">No work photos yet</h4>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:16px">Upload photos of your completed work to build credibility and attract more employers!</p>
+      <button class="btn btn-primary" onclick="showToast('Photo upload coming in Day 4!','info')">
+        <i class="fas fa-upload"></i> Upload Work Photos
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="script.js"></script>
+<script>
+  let editMode = false;
+
+  function loadProfile() {
+    const user = getUser();
+    if (!user) { window.location.href = 'login.html'; return; }
+    const name = user.name || 'User';
+    document.getElementById('profileAvatar').textContent = name.charAt(0).toUpperCase();
+    document.getElementById('profileName').textContent = name;
+    document.getElementById('profileLocation').textContent = '📍 ' + (user.location || 'Location not set');
+    document.getElementById('profileRoleBadge').textContent = user.role === 'employer' ? '🧑‍💼 Employer' : '👷 Worker';
+    document.getElementById('profileTrust').textContent = user.trustScore || 72;
+    document.getElementById('trustNum').textContent = user.trustScore || 72;
+    document.getElementById('infoName').textContent = name;
+    document.getElementById('infoPhone').textContent = user.phone || '—';
+    document.getElementById('infoEmail').textContent = user.email || '—';
+    document.getElementById('infoLoc').textContent = user.location || '—';
+    document.getElementById('infoRate').textContent = user.rate ? '₹' + user.rate + '/day' : '—';
+    document.getElementById('infoRole').textContent = user.role === 'employer' ? 'Employer' : 'Worker';
+    // Skills
+    const skillsDiv = document.getElementById('skillsDisplay');
+    if (user.skills && user.skills.length > 0) {
+      skillsDiv.innerHTML = user.skills.map(s => `<span class="skill-pill">${s}</span>`).join('');
+    }
+  }
+
+  function toggleEdit() {
+    editMode = !editMode;
+    document.getElementById('editForm').classList.toggle('active', editMode);
+    document.getElementById('viewMode').classList.toggle('hidden', editMode);
+    document.getElementById('editBtnText').textContent = editMode ? 'Cancel' : 'Edit';
+    if (editMode) {
+      const user = getUser();
+      if (user) {
+        document.getElementById('editName').value = user.name || '';
+        document.getElementById('editPhone').value = user.phone || '';
+        document.getElementById('editEmail').value = user.email || '';
+        document.getElementById('editLocation').value = user.location || '';
+        document.getElementById('editRate').value = user.rate || '';
+      }
+    }
+  }
+
+  function saveProfile() {
+    const user = getUser() || {};
+    user.name = document.getElementById('editName').value.trim();
+    user.phone = document.getElementById('editPhone').value.trim();
+    user.email = document.getElementById('editEmail').value.trim();
+    user.location = document.getElementById('editLocation').value.trim();
+    user.rate = document.getElementById('editRate').value.trim();
+    if (!user.name) { showToast('Name cannot be empty','error'); return; }
+    localStorage.setItem('sn_user', JSON.stringify(user));
+    showToast('Profile updated successfully! ✅','success');
+    editMode = false;
+    document.getElementById('editForm').classList.remove('active');
+    document.getElementById('viewMode').classList.remove('hidden');
+    document.getElementById('editBtnText').textContent = 'Edit';
+    loadProfile();
+  }
+
+  loadProfile();
+</script>
+</body>
+</html>

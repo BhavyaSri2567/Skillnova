@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fraud Detection — SkillNova</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body { background: var(--bg); padding-top: 70px; }
+    .fraud-layout { max-width: 860px; margin: 0 auto; padding: 32px 24px; }
+    .fraud-hero { background: linear-gradient(135deg, #1a0a0a, #2d0f0f); border-radius: var(--radius-lg); padding: 36px; margin-bottom: 28px; color: white; position: relative; overflow: hidden; text-align: center; }
+    .fraud-hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 280px; height: 280px; background: radial-gradient(circle, rgba(239,68,68,0.15), transparent 70%); border-radius: 50%; }
+    .fraud-hero::after { content: ''; position: absolute; bottom: -60px; left: -60px; width: 220px; height: 220px; background: radial-gradient(circle, rgba(245,158,11,0.1), transparent 70%); border-radius: 50%; }
+    .fraud-hero h1 { font-family: var(--font-display); font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; position: relative; z-index: 1; }
+    .fraud-hero p { color: rgba(255,255,255,0.6); font-size: 0.95rem; max-width: 500px; margin: 0 auto; line-height: 1.7; position: relative; z-index: 1; }
+    .fraud-stats { display: flex; justify-content: center; gap: 32px; margin-top: 24px; position: relative; z-index: 1; }
+    .fs-stat h3 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; }
+    .fs-stat p { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
+    .section-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 24px; }
+    .sc-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .sc-header h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+    .sc-body { padding: 24px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    textarea { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.95rem; color: var(--text); background: white; transition: var(--transition); resize: vertical; font-family: var(--font-body); min-height: 90px; }
+    textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,107,255,0.1); outline: none; }
+
+    /* Result Box */
+    .result-box { border-radius: var(--radius-lg); padding: 24px; margin-top: 20px; display: none; }
+    .result-box.low { background: rgba(16,185,129,0.07); border: 2px solid rgba(16,185,129,0.3); }
+    .result-box.medium { background: rgba(245,158,11,0.07); border: 2px solid rgba(245,158,11,0.3); }
+    .result-box.high { background: rgba(239,68,68,0.07); border: 2px solid rgba(239,68,68,0.3); }
+    .result-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .risk-icon { font-size: 2.5rem; }
+    .risk-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; }
+    .risk-sub { font-size: 0.85rem; color: var(--text-light); margin-top: 3px; }
+    .risk-score-bar { margin: 16px 0; }
+    .risk-score-bar .label { display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .risk-bar-bg { height: 10px; background: var(--border); border-radius: 10px; overflow: hidden; }
+    .risk-bar-fill { height: 100%; border-radius: 10px; transition: width 1s ease; }
+    .low .risk-bar-fill { background: var(--success); }
+    .medium .risk-bar-fill { background: var(--warning); }
+    .high .risk-bar-fill { background: var(--danger); }
+    .reasons-list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+    .reason-item { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: var(--text); background: rgba(255,255,255,0.6); padding: 8px 12px; border-radius: var(--radius-sm); }
+    .recommendation-box { margin-top: 16px; padding: 14px 18px; border-radius: var(--radius); font-size: 0.88rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+    .low .recommendation-box { background: rgba(16,185,129,0.12); color: #065f46; }
+    .medium .recommendation-box { background: rgba(245,158,11,0.12); color: #92400e; }
+    .high .recommendation-box { background: rgba(239,68,68,0.12); color: #991b1b; }
+
+    /* Recent Reports */
+    .report-list { display: flex; flex-direction: column; gap: 12px; }
+    .report-item { display: flex; align-items: center; gap: 14px; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius); transition: var(--transition); }
+    .report-item:hover { box-shadow: var(--shadow); }
+    .report-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .report-icon.safe { background: rgba(16,185,129,0.1); }
+    .report-icon.warn { background: rgba(245,158,11,0.1); }
+    .report-icon.danger { background: rgba(239,68,68,0.1); }
+    .report-info { flex: 1; }
+    .report-info h4 { font-size: 0.9rem; font-weight: 700; color: var(--dark); }
+    .report-info p { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    .risk-badge { font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 50px; flex-shrink: 0; }
+    .badge-low { background: rgba(16,185,129,0.1); color: var(--success); }
+    .badge-medium { background: rgba(245,158,11,0.1); color: var(--warning); }
+    .badge-high { background: rgba(239,68,68,0.1); color: var(--danger); }
+
+    /* Tips */
+    .tips-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+    .tip-card { background: var(--bg); border-radius: var(--radius); padding: 16px; text-align: center; }
+    .tip-card .tip-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .tip-card h4 { font-size: 0.85rem; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+    .tip-card p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } .fraud-stats { gap: 16px; } .tips-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-logo"><div class="nav-logo-icon">⚡</div>Skill<span>Nova</span></div>
+  <div style="display:flex;gap:10px">
+    <a href="dashboard.html" class="btn btn-outline" style="padding:7px 16px;font-size:0.85rem"><i class="fas fa-arrow-left"></i> Dashboard</a>
+  </div>
+</nav>
+
+<div class="fraud-layout">
+
+  <!-- Hero -->
+  <div class="fraud-hero">
+    <h1>🛡️ AI Fraud Detection</h1>
+    <p>Our AI automatically scans all profiles and job postings to detect fake listings, suspicious activity, and fraud — keeping SkillNova safe for everyone.</p>
+    <div class="fraud-stats">
+      <div class="fs-stat"><h3>1,240</h3><p>Scans Today</p></div>
+      <div class="fs-stat"><h3>98.5%</h3><p>Accuracy</p></div>
+      <div class="fs-stat"><h3>47</h3><p>Frauds Blocked</p></div>
+    </div>
+  </div>
+
+  <!-- Check a Job -->
+  <div class="section-card">
+    <div class="sc-header"><h3>🔍 Check a Job or Profile for Fraud</h3></div>
+    <div class="sc-body">
+      <p style="font-size:0.88rem;color:var(--text-light);margin-bottom:20px">Paste any job listing or profile details below. Our AI will analyze it and give you a fraud risk score instantly.</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Profile / Employer Name</label>
+          <div class="input-wrap">
+            <i class="fas fa-user icon"></i>
+            <input type="text" id="fraudName" placeholder="e.g. Rajesh Kumar"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Job Title</label>
+          <div class="input-wrap">
+            <i class="fas fa-briefcase icon"></i>
+            <input type="text" id="fraudTitle" placeholder="e.g. Electrician Needed"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Offered Price / Salary</label>
+          <div class="input-wrap">
+            <i class="fas fa-rupee-sign icon"></i>
+            <input type="text" id="fraudPrice" placeholder="e.g. ₹5,000/day or ₹50,000/month"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Location</label>
+          <div class="input-wrap">
+            <i class="fas fa-map-marker-alt icon"></i>
+            <input type="text" id="fraudLocation" placeholder="e.g. Chennai, Tamil Nadu"/>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Job Description / Message Received</label>
+        <textarea id="fraudDesc" placeholder="Paste the job description or suspicious message here..."></textarea>
+      </div>
+      <button class="btn btn-primary btn-lg" id="fraudBtn" onclick="checkFraud()">
+        <i class="fas fa-shield-alt"></i> Run AI Fraud Check
+      </button>
+
+      <!-- Result -->
+      <div class="result-box" id="resultBox">
+        <div class="result-header">
+          <div class="risk-icon" id="riskIcon">✅</div>
+          <div>
+            <div class="risk-title" id="riskTitle">Low Risk</div>
+            <div class="risk-sub" id="riskSub">This listing appears to be legitimate</div>
+          </div>
+        </div>
+        <div class="risk-score-bar">
+          <div class="label"><span>Risk Score</span><span id="riskScoreText">15/100</span></div>
+          <div class="risk-bar-bg"><div class="risk-bar-fill" id="riskBarFill" style="width:0%"></div></div>
+        </div>
+        <div class="reasons-list" id="reasonsList"></div>
+        <div class="recommendation-box" id="recommendationBox"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Scans -->
+  <div class="section-card">
+    <div class="sc-header"><h3>📋 Recent Fraud Scans</h3></div>
+    <div class="sc-body">
+      <div class="report-list">
+        <div class="report-item">
+          <div class="report-icon safe">✅</div>
+          <div class="report-info"><h4>Plumbing Job — Rajesh Kumar</h4><p>Scanned 2 hours ago · Anna Nagar, Chennai</p></div>
+          <span class="risk-badge badge-low">✅ Safe</span>
+        </div>
+        <div class="report-item">
+          <div class="report-icon warn">⚠️</div>
+          <div class="report-info"><h4>Work From Home — Unknown Employer</h4><p>Scanned 5 hours ago · No location given</p></div>
+          <span class="risk-badge badge-medium">⚠️ Suspicious</span>
+        </div>
+        <div class="report-item">
+          <div class="report-icon danger">🚫</div>
+          <div class="report-info"><h4>Easy Money Job — Pay ₹10,000/hour</h4><p>Scanned yesterday · Blocked automatically</p></div>
+          <span class="risk-badge badge-high">🚫 Fraud</span>
+        </div>
+        <div class="report-item">
+          <div class="report-icon safe">✅</div>
+          <div class="report-info"><h4>Electrician Work — Kumar Builders</h4><p>Scanned yesterday · Coimbatore</p></div>
+          <span class="risk-badge badge-low">✅ Safe</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Safety Tips -->
+  <div class="section-card">
+    <div class="sc-header"><h3>💡 How to Stay Safe on SkillNova</h3></div>
+    <div class="sc-body">
+      <div class="tips-grid">
+        <div class="tip-card"><div class="tip-icon">🔍</div><h4>Check Trust Score</h4><p>Always work with employers who have a Trust Score above 70. Low scores mean fewer verified reviews.</p></div>
+        <div class="tip-card"><div class="tip-icon">💰</div><h4>Avoid Unrealistic Pay</h4><p>If a job offers ₹5,000+/day for simple work, it's likely a scam. Normal rates are ₹400–₹1,500/day.</p></div>
+        <div class="tip-card"><div class="tip-icon">💬</div><h4>Chat First, Then Meet</h4><p>Always discuss work details through SkillNova chat before meeting anyone in person.</p></div>
+        <div class="tip-card"><div class="tip-icon">📍</div><h4>Verify Location</h4><p>Be cautious of jobs with no specific location or jobs that ask you to travel far without advance payment.</p></div>
+        <div class="tip-card"><div class="tip-icon">🚫</div><h4>Never Share OTP</h4><p>SkillNova will never ask for your OTP, Aadhaar, or bank details through chat or phone calls.</p></div>
+        <div class="tip-card"><div class="tip-icon">🛡️</div><h4>Report Suspicious Jobs</h4><p>See something suspicious? Use the fraud check tool or tap "Report" on any job listing.</p></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="script.js"></script>
+<script>
+  async function checkFraud() {
+    const name = document.getElementById('fraudName').value.trim();
+    const title = document.getElementById('fraudTitle').value.trim();
+    const price = document.getElementById('fraudPrice').value.trim();
+    const desc = document.getElementById('fraudDesc').value.trim();
+
+    if (!title && !desc) { showToast('Please enter at least a job title or description', 'error'); return; }
+
+    const btn = document.getElementById('fraudBtn');
+    btn.innerHTML = '<span class="spinner"></span> Analyzing with AI...';
+    btn.disabled = true;
+
+    await new Promise(r => setTimeout(r, 2000));
+
+    // Smart fraud detection logic
+    let score = 10;
+    let reasons = [];
+    const text = (title + ' ' + desc + ' ' + price).toLowerCase();
+
+    // Red flags
+    if (text.includes('easy money') || text.includes('quick money')) { score += 40; reasons.push('🚩 Promises "easy money" — common scam phrase'); }
+    if (text.includes('work from home') && text.includes('daily payment')) { score += 25; reasons.push('🚩 "Work from home with daily payment" is a common fraud pattern'); }
+    if (text.includes('advance') || text.includes('deposit')) { score += 35; reasons.push('🚩 Asks for advance payment or deposit — never pay to get a job'); }
+    if (text.includes('whatsapp') || text.includes('telegram')) { score += 20; reasons.push('🚩 Asks to contact via WhatsApp/Telegram instead of platform'); }
+    if (text.includes('otp') || text.includes('aadhaar') || text.includes('bank')) { score += 50; reasons.push('🚩 Asks for OTP, Aadhaar or bank details — definite fraud!'); }
+    const priceNum = parseInt(price.replace(/[^0-9]/g, ''));
+    if (priceNum > 5000 && text.includes('day')) { score += 30; reasons.push('🚩 Daily pay of ₹5,000+ is unrealistically high for manual work'); }
+    if (!name || name.length < 3) { score += 15; reasons.push('⚠️ No employer name provided — lack of transparency'); }
+
+    // Green flags
+    if (price && priceNum >= 400 && priceNum <= 1500) reasons.push('✅ Price is within normal range for skilled work');
+    if (name && name.length > 3) reasons.push('✅ Employer name provided');
+    if (desc && desc.length > 50) reasons.push('✅ Detailed job description provided');
+
+    score = Math.min(100, score);
+
+    const resultBox = document.getElementById('resultBox');
+    resultBox.className = 'result-box';
+
+    if (score <= 25) {
+      resultBox.classList.add('low');
+      document.getElementById('riskIcon').textContent = '✅';
+      document.getElementById('riskTitle').textContent = 'Low Risk — Looks Safe';
+      document.getElementById('riskSub').textContent = 'This listing appears to be legitimate';
+      document.getElementById('recommendationBox').innerHTML = '✅ Safe to proceed. You can contact this employer through SkillNova chat.';
+      if (reasons.filter(r => r.startsWith('✅')).length === 0) reasons.push('✅ No major fraud indicators detected');
+    } else if (score <= 60) {
+      resultBox.classList.add('medium');
+      document.getElementById('riskIcon').textContent = '⚠️';
+      document.getElementById('riskTitle').textContent = 'Medium Risk — Proceed with Caution';
+      document.getElementById('riskSub').textContent = 'Some suspicious patterns detected';
+      document.getElementById('recommendationBox').innerHTML = '⚠️ Proceed with caution. Verify employer identity before meeting or starting work.';
+    } else {
+      resultBox.classList.add('high');
+      document.getElementById('riskIcon').textContent = '🚫';
+      document.getElementById('riskTitle').textContent = 'High Risk — Likely Fraud!';
+      document.getElementById('riskSub').textContent = 'Multiple fraud indicators detected — avoid this listing';
+      document.getElementById('recommendationBox').innerHTML = '🚫 DO NOT proceed! This listing shows multiple signs of fraud. Report it immediately.';
+    }
+
+    document.getElementById('riskScoreText').textContent = score + '/100';
+    document.getElementById('riskBarFill').style.width = score + '%';
+    document.getElementById('reasonsList').innerHTML = reasons.map(r => `<div class="reason-item">${r}</div>`).join('');
+    resultBox.style.display = 'block';
+    resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    btn.innerHTML = '<i class="fas fa-shield-alt"></i> Run AI Fraud Check';
+    btn.disabled = false;
+    showToast('Fraud analysis complete!', score > 60 ? 'error' : score > 25 ? 'warning' : 'success');
+  }
+</script>
+</body>
+</html>
