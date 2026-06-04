@@ -1,7 +1,7 @@
 // ============================================
 //   SKILLNOVA - Backend API Connection
 // ============================================
-const API_URL = 'https://skillnova-api.onrender.com';
+const API_URL = 'https://skillnova-oo01.onrender.com';
 
 // Save token to localStorage
 function saveToken(token) {
