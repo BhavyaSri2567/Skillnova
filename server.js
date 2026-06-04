@@ -618,7 +618,13 @@ function getDefaultJobs() {
     { title: 'Furniture Repair', employer: 'Suresh Store', price: '₹700/day', distance: '3.4 km', match: 68, icon: '🪚' },
   ];
 }
-
+// Prevent Render free tier from sleeping
+const https = require('https');
+setInterval(() => {
+  https.get('https://skillnova-oo01.onrender.com', () => {
+    console.log('💓 Keepalive ping!');
+  }).on('error', () => {});
+}, 14 * 60 * 1000);
 // ============================================
 //   START SERVER
 // ============================================
