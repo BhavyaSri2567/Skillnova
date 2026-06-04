@@ -323,12 +323,12 @@ app.get('/auth/google/callback',
       location: req.user.location,
       skills: JSON.parse(req.user.skills || '[]')
     };
-    res.redirect(`http://127.0.0.1:5500/dashboard.html?token=${token}&user=${encodeURIComponent(JSON.stringify(user))}`);
+    res.redirect(`https://skillnova-omega.vercel.app/dashboard.html?token=${token}&user=${encodeURIComponent(JSON.stringify(user))}`);
   }
 );
 
 app.get('/auth/failed', (req, res) => {
-  res.redirect('http://127.0.0.1:5500/login.html?error=google_failed');
+  res.redirect('https://skillnova-omega.vercel.app/login.html?error=google_failed');
 });
 
 // ---- REGISTER ----
