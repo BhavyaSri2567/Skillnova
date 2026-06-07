@@ -125,3 +125,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
 console.log('%c⚡ SkillNova Loaded', 'color:#1a6bff;font-size:1.2rem;font-weight:bold');
 console.log('%cA Unified Platform for Decent Work & Economic Growth', 'color:#6b7280;font-size:0.85rem');
+// Check if profile is complete
+function checkProfileComplete() {
+  const user = getUser();
+  if (!user) { window.location.href = 'login.html'; return; }
+  
+  // Profile is incomplete if missing phone, location or skills
+  const incomplete = !user.phone || !user.location || 
+                     !user.skills || user.skills.length === 0;
+  
+  if (incomplete && !window.location.href.includes('setup.html')) {
+    window.location.href = 'setup.html';
+  }
+}

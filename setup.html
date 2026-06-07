@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Complete Your Profile — SkillNova</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body { background: var(--bg); padding-top: 70px; }
+    .setup-layout { max-width: 600px; margin: 0 auto; padding: 32px 24px; }
+    .setup-hero { background: linear-gradient(135deg, #0d1117, #1a2744); border-radius: var(--radius-lg); padding: 32px; margin-bottom: 28px; text-align: center; color: white; position: relative; overflow: hidden; }
+    .setup-hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(26,107,255,0.2), transparent 70%); border-radius: 50%; }
+    .setup-hero h1 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; position: relative; z-index: 1; }
+    .setup-hero p { color: rgba(255,255,255,0.6); font-size: 0.9rem; position: relative; z-index: 1; }
+    .setup-avatar { width: 70px; height: 70px; border-radius: 50%; margin: 0 auto 16px; border: 3px solid rgba(255,255,255,0.2); position: relative; z-index: 1; overflow: hidden; background: var(--primary); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1.8rem; font-weight: 800; color: white; }
+    .setup-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .progress-bar { background: rgba(255,255,255,0.1); border-radius: 10px; height: 6px; margin: 16px 0 0; position: relative; z-index: 1; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--success)); border-radius: 10px; transition: width 0.5s ease; }
+    .progress-text { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 6px; position: relative; z-index: 1; }
+    .setup-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 20px; }
+    .setup-card-header { padding: 18px 24px; border-bottom: 1px solid var(--border); }
+    .setup-card-header h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+    .setup-card-body { padding: 24px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .skills-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .skill-tag { padding: 7px 14px; border: 1.5px solid var(--border); border-radius: 50px; font-size: 0.82rem; font-weight: 600; color: var(--text); cursor: pointer; transition: var(--transition); background: white; }
+    .skill-tag:hover, .skill-tag.selected { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+    .step-dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+    .step-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); transition: var(--transition); }
+    .step-dot.active { background: var(--primary); transform: scale(1.2); }
+    .step-dot.done { background: var(--success); }
+    select { width: 100%; padding: 11px 14px 11px 40px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.95rem; color: var(--text); background: white; transition: var(--transition); font-family: var(--font-body); appearance: none; }
+    select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(26,107,255,0.1); }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-logo"><div class="nav-logo-icon">⚡</div>Skill<span>Nova</span></div>
+</nav>
+
+<div class="setup-layout">
+
+  <!-- Hero -->
+  <div class="setup-hero">
+    <div class="setup-avatar" id="setupAvatar">?</div>
+    <h1>Complete Your Profile 👋</h1>
+    <p id="setupWelcome">Welcome to SkillNova! Just a few details to get started.</p>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:33%"></div>
+    </div>
+    <div class="progress-text" id="progressText">Step 1 of 3 — Basic Info</div>
+  </div>
+
+  <!-- Step Dots -->
+  <div class="step-dots">
+    <div class="step-dot active" id="dot1"></div>
+    <div class="step-dot" id="dot2"></div>
+    <div class="step-dot" id="dot3"></div>
+  </div>
+
+  <!-- Step 1: Basic Info -->
+  <div id="step1">
+    <div class="setup-card">
+      <div class="setup-card-header"><h3>👤 Basic Information</h3></div>
+      <div class="setup-card-body">
+        <div class="form-group" style="margin-bottom:1.2rem">
+          <label>Full Name</label>
+          <div class="input-wrap">
+            <i class="fas fa-user icon"></i>
+            <input type="text" id="setupName" placeholder="Your full name"/>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:1.2rem">
+          <label>Mobile Number</label>
+          <div class="input-wrap">
+            <i class="fas fa-phone icon"></i>
+            <input type="tel" id="setupPhone" placeholder="10-digit mobile number"/>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:1.2rem">
+          <label>Location (City / Village)</label>
+          <div class="input-wrap">
+            <i class="fas fa-map-marker-alt icon"></i>
+            <input type="text" id="setupLocation" placeholder="e.g. Madurai, Tamil Nadu"/>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:1.6rem">
+          <label>I am joining as a...</label>
+          <div class="role-selector" style="margin-top:8px">
+            <label class="role-card selected" id="roleWorkerCard">
+              <input type="radio" name="setupRole" value="worker" checked/>
+              <span class="role-icon">👷</span>
+              <span class="role-name">Worker</span>
+              <span class="role-desc">Find jobs & earn money</span>
+            </label>
+            <label class="role-card" id="roleEmployerCard">
+              <input type="radio" name="setupRole" value="employer"/>
+              <span class="role-icon">🧑‍💼</span>
+              <span class="role-name">Employer</span>
+              <span class="role-desc">Post jobs & hire workers</span>
+            </label>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full btn-lg" onclick="goStep(2)">
+          Continue <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Skills -->
+  <div id="step2" style="display:none">
+    <div class="setup-card">
+      <div class="setup-card-header"><h3>🛠️ Your Skills</h3></div>
+      <div class="setup-card-body">
+        <p style="font-size:0.88rem;color:var(--text-light);margin-bottom:16px" id="skillsLabel">Select all skills you have:</p>
+        <div class="skills-grid" id="skillsGrid"></div>
+        <div class="form-group" style="margin-top:1.4rem;margin-bottom:1.6rem">
+          <label>Daily Rate / Pricing (₹)</label>
+          <div class="input-wrap">
+            <i class="fas fa-rupee-sign icon"></i>
+            <input type="number" id="setupRate" placeholder="e.g. 600 per day"/>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-outline btn-full" onclick="goStep(1)">
+            <i class="fas fa-arrow-left"></i> Back
+          </button>
+          <button class="btn btn-primary btn-full" onclick="goStep(3)">
+            Continue <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: Review & Submit -->
+  <div id="step3" style="display:none">
+    <div class="setup-card">
+      <div class="setup-card-header"><h3>✅ Review & Submit</h3></div>
+      <div class="setup-card-body">
+        <div style="background:var(--bg);border-radius:var(--radius);padding:20px;margin-bottom:20px">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;justify-content:space-between;font-size:0.88rem">
+              <span style="color:var(--text-muted)">Name</span>
+              <strong id="reviewName">—</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.88rem">
+              <span style="color:var(--text-muted)">Phone</span>
+              <strong id="reviewPhone">—</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.88rem">
+              <span style="color:var(--text-muted)">Location</span>
+              <strong id="reviewLocation">—</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.88rem">
+              <span style="color:var(--text-muted)">Role</span>
+              <strong id="reviewRole">—</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.88rem">
+              <span style="color:var(--text-muted)">Daily Rate</span>
+              <strong id="reviewRate">—</strong>
+            </div>
+            <div style="font-size:0.88rem">
+              <span style="color:var(--text-muted)">Skills</span>
+              <div id="reviewSkills" style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Trust Score Preview -->
+        <div style="background:linear-gradient(135deg,#0d1117,#1a2744);border-radius:var(--radius);padding:16px;margin-bottom:20px;color:white">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <span style="font-size:1.2rem">🤖</span>
+            <strong style="font-size:0.9rem">AI Trust Score Preview</strong>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="flex:1;height:8px;background:rgba(255,255,255,0.1);border-radius:10px;overflow:hidden">
+              <div style="width:65%;height:100%;background:linear-gradient(90deg,var(--primary),var(--success));border-radius:10px"></div>
+            </div>
+            <strong style="color:var(--success)">65/100</strong>
+          </div>
+          <p style="font-size:0.78rem;color:rgba(255,255,255,0.4);margin-top:8px">Complete more jobs and get ratings to increase your score!</p>
+        </div>
+
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-outline btn-full" onclick="goStep(2)">
+            <i class="fas fa-arrow-left"></i> Back
+          </button>
+          <button class="btn btn-primary btn-full btn-lg" id="submitProfileBtn" onclick="submitProfile()">
+            <i class="fas fa-rocket"></i> Go to Dashboard!
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="script.js"></script>
+<script>
+    // Handle Google OAuth redirect
+const urlParams = new URLSearchParams(window.location.search);
+const googleToken = urlParams.get('token');
+const googleUser = urlParams.get('user');
+if (googleToken && googleUser) {
+  saveToken(googleToken);
+  localStorage.setItem('sn_user', googleUser);
+  window.history.replaceState({}, '', 'setup.html');
+}
+  let selectedSkills = [];
+  const workerSkills = ['Plumber 🔧','Electrician ⚡','Carpenter 🪚','Painter 🎨','Welder 🔥','Mason 🧱','Driver 🚗','Mechanic 🔩','Gardener 🌿','Cook 👨‍🍳','Security 💂','Cleaner 🧹','Tailor ✂️','Delivery 📦','Other ➕'];
+  const employerNeeds = ['Home Repair 🏠','Construction 🏗️','Cleaning 🧹','Cooking 👨‍🍳','Driving 🚗','Security 💂','Electrical ⚡','Plumbing 🔧','Gardening 🌿','Delivery 📦','Event Help 🎉','Office Help 🖥️','Other ➕'];
+
+  // Load user info
+  const user = getUser();
+  if (!user) { window.location.href = 'login.html'; }
+  else {
+    const name = user.name || '';
+    document.getElementById('setupName').value = name;
+    document.getElementById('setupWelcome').textContent = `Welcome ${name.split(' ')[0]}! Just a few details to get started.`;
+    if (user.avatar) {
+      document.getElementById('setupAvatar').innerHTML = `<img src="${user.avatar}" alt="${name}"/>`;
+    } else {
+      document.getElementById('setupAvatar').textContent = name.charAt(0).toUpperCase();
+    }
+  }
+
+  // Role card selection
+  document.querySelectorAll('.role-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      loadSkillsGrid();
+    });
+  });
+
+  function loadSkillsGrid() {
+    const role = document.querySelector('input[name="setupRole"]:checked').value;
+    const skills = role === 'worker' ? workerSkills : employerNeeds;
+    document.getElementById('skillsLabel').textContent = role === 'worker'
+      ? 'Select all skills you have:'
+      : 'What kind of help do you need?';
+    const grid = document.getElementById('skillsGrid');
+    grid.innerHTML = '';
+    selectedSkills = [];
+    skills.forEach(skill => {
+      const tag = document.createElement('div');
+      tag.className = 'skill-tag';
+      tag.textContent = skill;
+      tag.onclick = () => {
+        tag.classList.toggle('selected');
+        if (tag.classList.contains('selected')) selectedSkills.push(skill);
+        else selectedSkills = selectedSkills.filter(s => s !== skill);
+      };
+      grid.appendChild(tag);
+    });
+  }
+
+  function updateProgress(step) {
+    const pcts = { 1: '33%', 2: '66%', 3: '100%' };
+    const labels = { 1: 'Step 1 of 3 — Basic Info', 2: 'Step 2 of 3 — Skills', 3: 'Step 3 of 3 — Review' };
+    document.getElementById('progressFill').style.width = pcts[step];
+    document.getElementById('progressText').textContent = labels[step];
+    for (let i = 1; i <= 3; i++) {
+      const dot = document.getElementById('dot' + i);
+      dot.className = 'step-dot';
+      if (i < step) dot.classList.add('done');
+      else if (i === step) dot.classList.add('active');
+    }
+  }
+
+  function goStep(step) {
+    if (step === 2) {
+      const name = document.getElementById('setupName').value.trim();
+      const phone = document.getElementById('setupPhone').value.trim();
+      const location = document.getElementById('setupLocation').value.trim();
+      if (!name) { showToast('Please enter your name', 'error'); return; }
+      if (!phone || phone.length < 10) { showToast('Please enter a valid phone number', 'error'); return; }
+      if (!location) { showToast('Please enter your location', 'error'); return; }
+      loadSkillsGrid();
+    }
+    if (step === 3) {
+      if (selectedSkills.length === 0) { showToast('Please select at least one skill', 'error'); return; }
+      // Fill review
+      const role = document.querySelector('input[name="setupRole"]:checked').value;
+      document.getElementById('reviewName').textContent = document.getElementById('setupName').value;
+      document.getElementById('reviewPhone').textContent = document.getElementById('setupPhone').value;
+      document.getElementById('reviewLocation').textContent = document.getElementById('setupLocation').value;
+      document.getElementById('reviewRole').textContent = role === 'worker' ? '👷 Worker' : '🧑‍💼 Employer';
+      document.getElementById('reviewRate').textContent = document.getElementById('setupRate').value ? '₹' + document.getElementById('setupRate').value + '/day' : 'Not set';
+      document.getElementById('reviewSkills').innerHTML = selectedSkills.map(s => `<span style="background:var(--primary-light);color:var(--primary);font-size:0.75rem;font-weight:600;padding:3px 10px;border-radius:50px">${s}</span>`).join('');
+    }
+    document.querySelectorAll('[id^="step"]').forEach(s => s.style.display = 'none');
+    document.getElementById('step' + step).style.display = 'block';
+    updateProgress(step);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async function submitProfile() {
+    const btn = document.getElementById('submitProfileBtn');
+    btn.innerHTML = '<span class="spinner"></span> Saving...';
+    btn.disabled = true;
+
+    const profileData = {
+      name: document.getElementById('setupName').value.trim(),
+      phone: document.getElementById('setupPhone').value.trim(),
+      location: document.getElementById('setupLocation').value.trim(),
+      role: document.querySelector('input[name="setupRole"]:checked').value,
+      skills: selectedSkills,
+      rate: document.getElementById('setupRate').value,
+      status: 'available'
+    };
+
+    try {
+      const data = await apiCall('/api/me', 'PUT', profileData);
+      if (data.success) {
+        // Update local user data
+        const user = getUser();
+        const updatedUser = { ...user, ...profileData, trustScore: data.trustScore, profileComplete: true };
+        localStorage.setItem('sn_user', JSON.stringify(updatedUser));
+        showToast('Profile saved! Welcome to SkillNova 🎉', 'success');
+        setTimeout(() => window.location.href = 'dashboard.html', 1200);
+      } else {
+        showToast(data.error || 'Failed to save profile', 'error');
+        btn.innerHTML = '<i class="fas fa-rocket"></i> Go to Dashboard!';
+        btn.disabled = false;
+      }
+    } catch (err) {
+      // Save locally if server fails
+      const user = getUser();
+      const updatedUser = { ...user, ...profileData, profileComplete: true };
+      localStorage.setItem('sn_user', JSON.stringify(updatedUser));
+      showToast('Profile saved locally! 🎉', 'success');
+      setTimeout(() => window.location.href = 'dashboard.html', 1200);
+    }
+  }
+
+  // Initialize
+  loadSkillsGrid();
+  updateProgress(1);
+</script>
+</body>
+</html>

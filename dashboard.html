@@ -225,6 +225,8 @@
 <script src="script.js"></script>
 <script>
   // Handle Google OAuth redirect
+  // Check profile is complete before showing dashboard
+checkProfileComplete();
 const urlParams = new URLSearchParams(window.location.search);
 const googleToken = urlParams.get('token');
 const googleUser = urlParams.get('user');

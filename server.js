@@ -323,7 +323,7 @@ app.get('/auth/google/callback',
       location: req.user.location,
       skills: JSON.parse(req.user.skills || '[]')
     };
-    res.redirect(`https://skillnova-omega.vercel.app/dashboard.html?token=${token}&user=${encodeURIComponent(JSON.stringify(user))}`);
+    res.redirect(`https://skillnova-omega.vercel.app/setup.html?token=${token}&user=${encodeURIComponent(JSON.stringify(user))}`);
   }
 );
 
@@ -589,6 +589,24 @@ app.post('/api/fraud-check', async (req, res) => {
     }
   } catch (err) {
     res.status(500).json({ error: 'Fraud check failed' });
+  }
+});
+// ---- DELETE ACCOUNT ----
+app.delete('/api/me', authMiddleware, (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Delete all user data
+    db.prepare('DELETE FROM ratings WHERE worker_id = ? OR employer_id = ?').run(userId, userId);
+    db.prepare('DELETE FROM messages WHERE sender_id = ? OR receiver_id = ?').run(userId, userId);
+    db.prepare('DELETE FROM jobs WHERE employer_id = ?').run(userId);
+    db.prepare('DELETE FROM skill_exchanges WHERE user_id = ?').run(userId);
+    db.prepare('DELETE FROM users WHERE id = ?').run(userId);
+
+    res.json({ success: true, message: 'Account deleted successfully' });
+  } catch (err) {
+    console.error('Delete error:', err.message);
+    res.status(500).json({ error: 'Failed to delete account' });
   }
 });
 
