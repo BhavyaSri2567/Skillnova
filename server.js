@@ -38,6 +38,7 @@ db.exec(`
     avatar TEXT,
     is_verified INTEGER DEFAULT 0,
     status TEXT DEFAULT 'available',
+    profile_complete INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
   CREATE TABLE IF NOT EXISTS jobs (
@@ -352,14 +353,17 @@ app.post('/api/register', async (req, res) => {
     const trustScore = calcTrustScore(user.id);
     const token = generateToken(user);
 
-    res.json({
-      success: true, token,
-      user: {
-        id: user.id, name: user.name, email: user.email,
-        role: user.role, trustScore, location: user.location,
-        skills: JSON.parse(user.skills || '[]')
-      }
-    });
+   res.json({
+  success: true, token,
+  profileComplete: false,
+  user: {
+    id: user.id, name: user.name, email: user.email,
+    role: user.role, trustScore,
+    location: user.location,
+    skills: JSON.parse(user.skills || '[]'),
+    profileComplete: false
+  }
+});
   } catch (err) {
     console.error('Register error:', err.message);
     res.status(500).json({ error: 'Registration failed: ' + err.message });
@@ -381,14 +385,21 @@ app.post('/api/login', async (req, res) => {
     if (!valid) return res.status(400).json({ error: 'Incorrect password' });
 
     const token = generateToken(user);
-    res.json({
-      success: true, token,
-      user: {
-        id: user.id, name: user.name, email: user.email,
-        role: user.role, trustScore: user.trust_score,
-        location: user.location, skills: JSON.parse(user.skills || '[]')
-      }
-    });
+   const isProfileComplete = !!(req.user.phone && req.user.location && 
+                             req.user.skills && req.user.skills !== '[]');
+const redirectPage = isProfileComplete ? 'dashboard.html' : 'setup.html';
+res.redirect(`https://skillnova-omega.vercel.app/${redirectPage}?token=${token}&user=${encodeURIComponent(JSON.stringify({...user, profileComplete: isProfileComplete}))}`);
+res.json({
+  success: true, token,
+  profileComplete: isProfileComplete,
+  user: {
+    id: user.id, name: user.name, email: user.email,
+    role: user.role, trustScore: user.trust_score,
+    location: user.location,
+    skills: JSON.parse(user.skills || '[]'),
+    profileComplete: isProfileComplete
+  }
+});
   } catch (err) {
     console.error('Login error:', err.message);
     res.status(500).json({ error: 'Login failed' });
@@ -413,8 +424,9 @@ app.get('/api/me', authMiddleware, (req, res) => {
 app.put('/api/me', authMiddleware, (req, res) => {
   try {
     const { name, phone, location, skills, rate, status } = req.body;
-    db.prepare(`UPDATE users SET name=?, phone=?, location=?, skills=?, rate=?, status=? WHERE id=?`)
-      .run(name, phone, location, JSON.stringify(skills || []), rate, status || 'available', req.user.id);
+    const profileComplete = !!(phone && location && skills && skills.length > 0) ? 1 : 0;
+db.prepare(`UPDATE users SET name=?, phone=?, location=?, skills=?, rate=?, status=?, profile_complete=? WHERE id=?`)
+  .run(name, phone, location, JSON.stringify(skills || []), rate, status || 'available', profileComplete, req.user.id);
     const trustScore = calcTrustScore(req.user.id);
     res.json({ success: true, trustScore });
   } catch (err) {

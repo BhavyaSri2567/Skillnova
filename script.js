@@ -128,13 +128,19 @@ console.log('%cA Unified Platform for Decent Work & Economic Growth', 'color:#6b
 // Check if profile is complete
 function checkProfileComplete() {
   const user = getUser();
-  if (!user) { window.location.href = 'login.html'; return; }
+  if (!user) { 
+    window.location.href = 'login.html'; 
+    return; 
+  }
   
-  // Profile is incomplete if missing phone, location or skills
+  // If already marked complete, go straight to dashboard
+  if (user.profileComplete) return;
+  
+  // Check actual data
   const incomplete = !user.phone || !user.location || 
                      !user.skills || user.skills.length === 0;
   
-  if (incomplete && !window.location.href.includes('setup.html')) {
+  if (incomplete) {
     window.location.href = 'setup.html';
   }
 }

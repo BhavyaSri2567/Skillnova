@@ -323,7 +323,11 @@ if (googleToken && googleUser) {
         const updatedUser = { ...user, ...profileData, trustScore: data.trustScore, profileComplete: true };
         localStorage.setItem('sn_user', JSON.stringify(updatedUser));
         showToast('Profile saved! Welcome to SkillNova 🎉', 'success');
-        setTimeout(() => window.location.href = 'dashboard.html', 1200);
+       // Skip setup if profile already complete
+const existingUser = getUser();
+if (existingUser && existingUser.profileComplete) {
+  window.location.href = 'dashboard.html';
+}
       } else {
         showToast(data.error || 'Failed to save profile', 'error');
         btn.innerHTML = '<i class="fas fa-rocket"></i> Go to Dashboard!';
@@ -335,7 +339,11 @@ if (googleToken && googleUser) {
       const updatedUser = { ...user, ...profileData, profileComplete: true };
       localStorage.setItem('sn_user', JSON.stringify(updatedUser));
       showToast('Profile saved locally! 🎉', 'success');
-      setTimeout(() => window.location.href = 'dashboard.html', 1200);
+      // Skip setup if profile already complete
+const existingUser = getUser();
+if (existingUser && existingUser.profileComplete) {
+  window.location.href = 'dashboard.html';
+}
     }
   }
 

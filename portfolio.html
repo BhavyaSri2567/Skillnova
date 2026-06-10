@@ -239,6 +239,7 @@
 <div class="toast-container" id="toastContainer"></div>
 <script src="script.js"></script>
 <script>
+  checkProfileComplete()
   const user = getUser();
   if (user) {
     document.getElementById('portSub').textContent = user.name + "'s complete work history, ratings and achievements.";

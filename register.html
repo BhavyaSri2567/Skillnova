@@ -441,8 +441,9 @@ async function handleRegister() {
       trustScore: data.user.trustScore
     }));
 
-    showToast('Account created! Welcome to SkillNova 🎉', 'success');
-    goToStep(4);
+   showToast('Account created! Welcome to SkillNova 🎉', 'success');
+// Always go to setup after fresh registration
+setTimeout(() => window.location.href = 'setup.html', 1200);
 
   } catch (err) {
     showToast('Cannot connect to server. Is it running?', 'error');

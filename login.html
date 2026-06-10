@@ -153,14 +153,20 @@ async function handleLogin() {
     }
 
     // Save token and user
-    saveToken(data.token);
-    localStorage.setItem('sn_user', JSON.stringify({
-      ...data.user,
-      trustScore: data.user.trustScore
-    }));
-
-    showToast('Login successful! 🎉', 'success');
-    setTimeout(() => window.location.href = 'dashboard.html', 1000);
+   saveToken(data.token);
+localStorage.setItem('sn_user', JSON.stringify({
+  ...data.user,
+  trustScore: data.user.trustScore
+}));
+showToast('Login successful! 🎉', 'success');
+// Check if profile is complete
+setTimeout(() => {
+  if (data.profileComplete) {
+    window.location.href = 'dashboard.html';
+  } else {
+    window.location.href = 'setup.html';
+  }
+}, 1000);
 
   } catch (err) {
     showToast('Cannot connect to server. Is it running?', 'error');
