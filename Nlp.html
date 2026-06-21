@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NLP Language Support — SkillNova</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body { background: var(--bg); padding-top: 70px; }
+    .nlp-layout { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+    .nlp-hero { background: linear-gradient(135deg, #0d1117, #1a2744); border-radius: var(--radius-lg); padding: 36px; margin-bottom: 28px; text-align: center; color: white; position: relative; overflow: hidden; }
+    .nlp-hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 280px; height: 280px; background: radial-gradient(circle, rgba(26,107,255,0.15), transparent 70%); border-radius: 50%; }
+    .nlp-hero h1 { font-family: var(--font-display); font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; position: relative; z-index: 1; }
+    .nlp-hero p { color: rgba(255,255,255,0.6); font-size: 0.95rem; max-width: 500px; margin: 0 auto; line-height: 1.7; position: relative; z-index: 1; }
+    .lang-flags { display: flex; justify-content: center; gap: 16px; margin-top: 20px; position: relative; z-index: 1; }
+    .lang-flag { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius); padding: 10px 20px; font-size: 0.88rem; font-weight: 600; color: white; cursor: pointer; transition: var(--transition); }
+    .lang-flag:hover, .lang-flag.active { background: rgba(26,107,255,0.3); border-color: rgba(26,107,255,0.5); }
+    .section-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 24px; }
+    .sc-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .sc-header h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+    .sc-body { padding: 24px; }
+    .nlp-input-box { background: var(--bg); border: 2px solid var(--border); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 16px; transition: var(--transition); }
+    .nlp-input-box:focus-within { border-color: var(--primary); background: white; }
+    .nlp-input-box textarea { width: 100%; background: none; border: none; font-size: 1rem; color: var(--text); font-family: var(--font-body); resize: none; min-height: 80px; line-height: 1.6; }
+    .nlp-input-box textarea:focus { outline: none; }
+    .nlp-input-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+    .lang-detect-badge { font-size: 0.78rem; font-weight: 700; padding: 3px 10px; border-radius: 50px; }
+    .badge-en { background: rgba(26,107,255,0.1); color: var(--primary); }
+    .badge-te { background: rgba(255,107,43,0.1); color: var(--accent); }
+    .nlp-result { background: linear-gradient(135deg, #0d1117, #1a2744); border-radius: var(--radius-lg); padding: 20px; color: white; margin-top: 16px; display: none; }
+    .nlp-result-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .nlp-result-header h4 { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; }
+    .nlp-result-text { font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.7; }
+    .nlp-steps { display: flex; flex-direction: column; gap: 0; }
+    .nlp-step { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+    .nlp-step:last-child { border-bottom: none; }
+    .step-num { width: 32px; height: 32px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 0.85rem; font-weight: 800; flex-shrink: 0; }
+    .step-content h4 { font-size: 0.9rem; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+    .step-content p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+    .example-queries { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .example-q { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 14px; font-size: 0.82rem; cursor: pointer; transition: var(--transition); color: var(--text); }
+    .example-q:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+    .keyword-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .keyword-table th { padding: 10px 16px; text-align: left; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; background: var(--bg); border-bottom: 1px solid var(--border); }
+    .keyword-table td { padding: 10px 16px; border-bottom: 1px solid var(--bg); }
+    .keyword-table tr:last-child td { border-bottom: none; }
+    .keyword-table tr:hover td { background: var(--bg); }
+    .te-word { font-size: 1rem; color: var(--accent); font-weight: 600; }
+    .en-word { color: var(--primary); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-logo"><div class="nav-logo-icon">⚡</div>Skill<span>Nova</span></div>
+  <div style="display:flex;gap:10px">
+    <button id="langToggle" class="btn btn-outline" style="padding:7px 16px;font-size:0.85rem" onclick="SkillNovaLang.switch(SkillNovaLang.current === 'en' ? 'te' : 'en')">
+      🌐 తెలుగు
+    </button>
+    <a href="dashboard.html" class="btn btn-primary" style="padding:7px 16px;font-size:0.85rem">
+      <i class="fas fa-arrow-left"></i> Dashboard
+    </a>
+  </div>
+</nav>
+
+<div class="nlp-layout">
+
+  <!-- Hero -->
+  <div class="nlp-hero">
+    <h1>🌐 NLP Language Support</h1>
+    <p>SkillNova now understands Telugu and English! Workers can search for jobs, ask AI questions, and use the platform in their native language.</p>
+    <div class="lang-flags">
+      <div class="lang-flag active" onclick="setActiveLang('en', this)">🇮🇳 English</div>
+      <div class="lang-flag" onclick="setActiveLang('te', this)">🇮🇳 తెలుగు</div>
+    </div>
+  </div>
+
+  <!-- Live NLP Demo -->
+  <div class="section-card">
+    <div class="sc-header">
+      <h3>🤖 Live NLP Demo — Ask in Telugu or English</h3>
+      <span id="langBadge" class="lang-detect-badge badge-en">🇮🇳 English Detected</span>
+    </div>
+    <div class="sc-body">
+      <p style="font-size:0.88rem;color:var(--text-light);margin-bottom:16px">Type your question in Telugu or English — our AI automatically detects your language and responds in the same language!</p>
+
+      <!-- Example queries -->
+      <div style="margin-bottom:16px">
+        <p style="font-size:0.78rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Try these examples:</p>
+        <div class="example-queries">
+          <div class="example-q" onclick="setQuery(this.textContent)">What skills should I learn?</div>
+          <div class="example-q" onclick="setQuery(this.textContent)">నేను ఏ నైపుణ్యాలు నేర్చుకోవాలి?</div>
+          <div class="example-q" onclick="setQuery(this.textContent)">How to earn more money?</div>
+          <div class="example-q" onclick="setQuery(this.textContent)">నాకు ఎలక్ట్రీషియన్ పని కావాలి</div>
+          <div class="example-q" onclick="setQuery(this.textContent)">దగ్గరలో ఉద్యోగాలు చూపించు</div>
+          <div class="example-q" onclick="setQuery(this.textContent)">Find plumber jobs near me</div>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="nlp-input-box">
+        <textarea id="nlpInput" placeholder="Type in Telugu or English... / తెలుగు లేదా ఇంగ్లీష్‌లో టైప్ చేయండి..." oninput="detectLanguage(this.value)"></textarea>
+        <div class="nlp-input-footer">
+          <span id="langDetectText" style="font-size:0.78rem;color:var(--text-muted)">Start typing to detect language...</span>
+          <button class="btn btn-primary" id="nlpBtn" onclick="askNLP()">
+            <i class="fas fa-language"></i> Ask in Your Language
+          </button>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div class="nlp-result" id="nlpResult">
+        <div class="nlp-result-header">
+          <span style="font-size:1.2rem">🤖</span>
+          <h4 id="nlpResultLang">AI Response</h4>
+          <span id="nlpLangBadge" style="background:rgba(26,107,255,0.2);color:#7eb3ff;font-size:0.72rem;font-weight:700;padding:2px 8px;border-radius:50px;margin-left:auto">English</span>
+        </div>
+        <div class="nlp-result-text" id="nlpResultText"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How NLP Works -->
+  <div class="section-card">
+    <div class="sc-header"><h3>⚙️ How NLP Works in SkillNova</h3></div>
+    <div class="sc-body">
+      <div class="nlp-steps">
+        <div class="nlp-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Language Detection</h4>
+            <p>When you type, our system automatically detects whether you're writing in Telugu or English using Unicode character analysis. Telugu characters fall in the range U+0C00–U+0C7F.</p>
+          </div>
+        </div>
+        <div class="nlp-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Keyword Translation</h4>
+            <p>Telugu job-related keywords are instantly mapped to English equivalents. For example, "ప్లంబర్" → "plumber", "ఎలక్ట్రీషియన్" → "electrician".</p>
+          </div>
+        </div>
+        <div class="nlp-step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>AI Processing</h4>
+            <p>The translated query is sent to Groq AI with instructions to respond in the user's language. The AI understands context and gives relevant job/skill advice.</p>
+          </div>
+        </div>
+        <div class="nlp-step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Response in Native Language</h4>
+            <p>The AI responds in Telugu or English based on what you typed. Rural workers who aren't comfortable with English can use SkillNova fully in Telugu!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Telugu Keywords Reference -->
+  <div class="section-card">
+    <div class="sc-header"><h3>📖 Telugu Job Keywords Reference</h3></div>
+    <div class="sc-body" style="padding:0">
+      <table class="keyword-table">
+        <thead>
+          <tr>
+            <th>Telugu తెలుగు</th>
+            <th>English</th>
+            <th>Category</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="te-word">ప్లంబర్</td><td class="en-word">Plumber</td><td>Skill</td></tr>
+          <tr><td class="te-word">ఎలక్ట్రీషియన్</td><td class="en-word">Electrician</td><td>Skill</td></tr>
+          <tr><td class="te-word">కార్పెంటర్</td><td class="en-word">Carpenter</td><td>Skill</td></tr>
+          <tr><td class="te-word">పెయింటర్</td><td class="en-word">Painter</td><td>Skill</td></tr>
+          <tr><td class="te-word">వెల్డర్</td><td class="en-word">Welder</td><td>Skill</td></tr>
+          <tr><td class="te-word">డ్రైవర్</td><td class="en-word">Driver</td><td>Skill</td></tr>
+          <tr><td class="te-word">వంటవారు</td><td class="en-word">Cook</td><td>Skill</td></tr>
+          <tr><td class="te-word">పని / ఉద్యోగం</td><td class="en-word">Job / Work</td><td>General</td></tr>
+          <tr><td class="te-word">సంపాదన / జీతం</td><td class="en-word">Earn / Salary</td><td>General</td></tr>
+          <tr><td class="te-word">నైపుణ్యం</td><td class="en-word">Skill</td><td>General</td></tr>
+          <tr><td class="te-word">అత్యవసరం</td><td class="en-word">Emergency</td><td>General</td></tr>
+          <tr><td class="te-word">దగ్గర</td><td class="en-word">Nearby</td><td>Location</td></tr>
+          <tr><td class="te-word">పైపు లీకేజ్</td><td class="en-word">Pipe leak (Plumber)</td><td>Problem</td></tr>
+          <tr><td class="te-word">కరెంట్ పని</td><td class="en-word">Electrical work</td><td>Problem</td></tr>
+          <tr><td class="te-word">నిర్మాణం</td><td class="en-word">Construction</td><td>Industry</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- UI Language Switcher Demo -->
+  <div class="section-card">
+    <div class="sc-header"><h3>🎨 UI Language Switcher</h3></div>
+    <div class="sc-body">
+      <p style="font-size:0.88rem;color:var(--text-light);margin-bottom:20px">Switch the entire dashboard UI between Telugu and English with one click!</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn btn-primary btn-lg" onclick="SkillNovaLang.switch('en')">
+          🇮🇳 Switch to English
+        </button>
+        <button class="btn btn-accent btn-lg" onclick="SkillNovaLang.switch('te')">
+          🇮🇳 తెలుగులోకి మార్చు
+        </button>
+      </div>
+      <div style="margin-top:20px;background:var(--bg);border-radius:var(--radius);padding:16px">
+        <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:10px">Preview of translated UI elements:</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.85rem">
+          <div style="color:var(--text-muted)">Dashboard →</div><div id="prev1" style="font-weight:600">Dashboard</div>
+          <div style="color:var(--text-muted)">Find Jobs →</div><div id="prev2" style="font-weight:600">Find Jobs</div>
+          <div style="color:var(--text-muted)">My Profile →</div><div id="prev3" style="font-weight:600">My Profile</div>
+          <div style="color:var(--text-muted)">Ask AI →</div><div id="prev4" style="font-weight:600">Ask AI</div>
+          <div style="color:var(--text-muted)">Available for Work →</div><div id="prev5" style="font-weight:600">Available for Work</div>
+          <div style="color:var(--text-muted)">Job Alerts →</div><div id="prev6" style="font-weight:600">Job Alerts</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="script.js"></script>
+<script src="language.js"></script>
+<script>
+  const user = getUser();
+
+  function setActiveLang(lang, el) {
+    document.querySelectorAll('.lang-flag').forEach(f => f.classList.remove('active'));
+    el.classList.add('active');
+    SkillNovaLang.switch(lang);
+    updatePreviews(lang);
+  }
+
+  function updatePreviews(lang) {
+    SkillNovaLang.current = lang;
+    document.getElementById('prev1').textContent = SkillNovaLang.t('dashboard');
+    document.getElementById('prev2').textContent = SkillNovaLang.t('findJobs');
+    document.getElementById('prev3').textContent = SkillNovaLang.t('myProfile');
+    document.getElementById('prev4').textContent = SkillNovaLang.t('askAI');
+    document.getElementById('prev5').textContent = SkillNovaLang.t('availableForWork');
+    document.getElementById('prev6').textContent = SkillNovaLang.t('jobAlerts');
+  }
+
+  function setQuery(text) {
+    document.getElementById('nlpInput').value = text;
+    detectLanguage(text);
+  }
+
+  function detectLanguage(text) {
+    if (!text.trim()) {
+      document.getElementById('langDetectText').textContent = 'Start typing to detect language...';
+      document.getElementById('langBadge').className = 'lang-detect-badge badge-en';
+      document.getElementById('langBadge').textContent = '🇮🇳 English Detected';
+      return;
+    }
+    const lang = SkillNovaLang.detect(text);
+    const badge = document.getElementById('langBadge');
+    const detectText = document.getElementById('langDetectText');
+    if (lang === 'te') {
+      badge.className = 'lang-detect-badge badge-te';
+      badge.textContent = '🇮🇳 తెలుగు గుర్తించబడింది';
+      detectText.textContent = '✅ Telugu detected! AI will respond in Telugu.';
+      detectText.style.color = 'var(--accent)';
+    } else {
+      badge.className = 'lang-detect-badge badge-en';
+      badge.textContent = '🇮🇳 English Detected';
+      detectText.textContent = '✅ English detected! AI will respond in English.';
+      detectText.style.color = 'var(--primary)';
+    }
+  }
+
+  async function askNLP() {
+    const input = document.getElementById('nlpInput').value.trim();
+    if (!input) { showToast('Please type a question first!', 'error'); return; }
+
+    const btn = document.getElementById('nlpBtn');
+    btn.innerHTML = '<span class="spinner"></span>';
+    btn.disabled = true;
+
+    const skills = user?.skills?.join(', ') || 'general worker';
+    const location = user?.location || 'Telangana, India';
+    const { prompt, detectedLang } = SkillNovaLang.buildPrompt(input, skills, location);
+
+    const resultBox = document.getElementById('nlpResult');
+    const resultText = document.getElementById('nlpResultText');
+    const resultLang = document.getElementById('nlpResultLang');
+    const nlpLangBadge = document.getElementById('nlpLangBadge');
+
+    resultBox.style.display = 'block';
+    resultText.textContent = detectedLang === 'te' ? 'AI ఆలోచిస్తోంది...' : 'AI is thinking...';
+    resultLang.textContent = detectedLang === 'te' ? 'తెలుగు AI సమాధానం' : 'AI Response';
+    nlpLangBadge.textContent = detectedLang === 'te' ? 'తెలుగు' : 'English';
+    nlpLangBadge.style.background = detectedLang === 'te' ? 'rgba(255,107,43,0.2)' : 'rgba(26,107,255,0.2)';
+    nlpLangBadge.style.color = detectedLang === 'te' ? '#fb923c' : '#7eb3ff';
+
+    try {
+      const data = await apiCall('/api/ai', 'POST', { prompt });
+      resultText.innerHTML = (data.response || 'No response').replace(/\n/g, '<br/>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    } catch (err) {
+      resultText.textContent = detectedLang === 'te'
+        ? 'సర్వర్‌కి కనెక్ట్ చేయలేకపోయాము. దయచేసి మళ్ళీ ప్రయత్నించండి.'
+        : 'Could not connect to server. Please try again.';
+    }
+
+    btn.innerHTML = '<i class="fas fa-language"></i> Ask in Your Language';
+    btn.disabled = false;
+  }
+
+  // Initialize previews
+  updatePreviews('en');
+  document.getElementById('nlpInput').addEventListener('keypress', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); askNLP(); }
+  });
+</script>
+</body>
+</html>

@@ -100,8 +100,19 @@
   </style>
 </head>
 <body>
-
-<div class="auth-page">
+<nav class="navbar" id="navbar" style="position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:70px;">
+  <div class="nav-logo">
+    <div class="nav-logo-icon">⚡</div>
+    Skill<span>Nova</span>
+  </div>
+  <button id="langToggle"
+    class="btn btn-outline"
+    style="padding:7px 14px;font-size:0.85rem"
+    onclick="SkillNovaLang.switch(SkillNovaLang.current==='en'?'te':'en')">
+    🌐 తెలుగు
+  </button>
+</nav>
+<div class="auth-page"style="padding-top:70px">
 
   <!-- LEFT PANEL -->
   <div class="auth-left">
@@ -303,6 +314,7 @@
 
 <div class="toast-container" id="toastContainer"></div>
 <script src="script.js"></script>
+<script src="language.js"></script>
 <script>
   let currentStep = 1;
   let selectedSkills = [];

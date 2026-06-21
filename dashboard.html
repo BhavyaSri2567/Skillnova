@@ -93,78 +93,155 @@
 </head>
 <body>
 
+<!-- NAVBAR -->
 <nav class="navbar" id="navbar">
   <div class="nav-logo"><div class="nav-logo-icon">⚡</div>Skill<span>Nova</span></div>
-  <div style="display:flex;align-items:center;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px">
     <span id="navWelcome" style="font-size:0.88rem;color:var(--text-light)">Welcome back!</span>
+    <!-- Language Toggle Button -->
+    <button id="langToggle"
+      class="btn btn-outline"
+      style="padding:7px 14px;font-size:0.82rem"
+      onclick="SkillNovaLang.switch(SkillNovaLang.current==='en'?'te':'en')">
+      🌐 తెలుగు
+    </button>
     <button class="btn btn-outline" style="padding:7px 16px;font-size:0.85rem" onclick="handleLogout()">
-      <i class="fas fa-sign-out-alt"></i> Logout
+      <i class="fas fa-sign-out-alt"></i> <span data-lang="logout">Logout</span>
     </button>
   </div>
 </nav>
 
 <div class="app-layout">
+
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-user">
       <div class="user-avatar" id="sidebarAvatar">R</div>
       <h4 id="sidebarName">Loading...</h4>
       <p id="sidebarRole">Worker</p>
-      <div class="trust-badge">⭐ Trust Score: <span id="sidebarTrust">72</span>/100</div>
+      <div class="trust-badge">⭐ <span data-lang="trustScore">Trust Score</span>: <span id="sidebarTrust">72</span>/100</div>
     </div>
     <nav class="sidebar-nav">
       <div class="nav-section-label">Main</div>
-      <a class="nav-item active" href="dashboard.html"><span class="nav-icon">🏠</span> Dashboard</a>
-      <a class="nav-item" href="profile.html"><span class="nav-icon">👤</span> My Profile</a>
-      <a class="nav-item" href="jobpost.html" id="postJobLink"><span class="nav-icon">📋</span> Post a Job</a>
+      <a class="nav-item active" href="dashboard.html">
+        <span class="nav-icon">🏠</span>
+        <span data-lang="dashboard">Dashboard</span>
+      </a>
+      <a class="nav-item" href="profile.html">
+        <span class="nav-icon">👤</span>
+        <span data-lang="myProfile">My Profile</span>
+      </a>
+      <a class="nav-item" href="jobpost.html" id="postJobLink">
+        <span class="nav-icon">📋</span>
+        <span data-lang="postJob">Post a Job</span>
+      </a>
       <div class="nav-section-label">Work</div>
-      <a class="nav-item" href="#"><span class="nav-icon">🔍</span> Find Jobs <span class="status-dot green"></span></a>
-      <a class="nav-item" href="chat.html"><span class="nav-icon">💬</span> Messages</a>
-      <a class="nav-item" href="portfolio.html"><span class="nav-icon">📁</span> My Portfolio</a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">🔍</span>
+        <span data-lang="findJobs">Find Jobs</span>
+        <span class="status-dot green"></span>
+      </a>
+      <a class="nav-item" href="chat.html">
+        <span class="nav-icon">💬</span>
+        <span data-lang="messages">Messages</span>
+      </a>
+      <a class="nav-item" href="portfolio.html">
+        <span class="nav-icon">📁</span>
+        <span data-lang="myPortfolio">My Portfolio</span>
+      </a>
       <div class="nav-section-label">Community</div>
-      <a class="nav-item" href="skillexchange.html"><span class="nav-icon">🤝</span> Skill Exchange</a>
-      <a class="nav-item" href="rating.html"><span class="nav-icon">⭐</span> My Ratings</a>
-      <a class="nav-item" href="fraud.html"><span class="nav-icon">🛡️</span> Fraud Check</a>
+      <a class="nav-item" href="skillexchange.html">
+        <span class="nav-icon">🤝</span>
+        <span data-lang="skillExchange">Skill Exchange</span>
+      </a>
+      <a class="nav-item" href="rating.html">
+        <span class="nav-icon">⭐</span>
+        <span data-lang="myRatings">My Ratings</span>
+      </a>
+      <a class="nav-item" href="nlp.html">
+        <span class="nav-icon">🌐</span>
+        Language Support
+      </a>
+      <a class="nav-item" href="fraud.html">
+        <span class="nav-icon">🛡️</span>
+        Fraud Check
+      </a>
       <div class="nav-section-label">Account</div>
-      <a class="nav-item" href="#" onclick="handleLogout()"><span class="nav-icon">🚪</span> Logout</a>
+      <a class="nav-item" href="#" onclick="handleLogout()">
+        <span class="nav-icon">🚪</span>
+        <span data-lang="logout">Logout</span>
+      </a>
     </nav>
   </aside>
 
+  <!-- MAIN CONTENT -->
   <main class="main-content">
+
+    <!-- Header -->
     <div class="page-header">
-      <h1>Good morning, <span id="headerName">there</span>! 👋</h1>
+      <h1><span data-lang="goodMorning">Good morning</span>, <span id="headerName">there</span>! 👋</h1>
       <p id="headerSub">Here's what's happening in your area today.</p>
     </div>
 
+    <!-- Stats -->
     <div class="stats-grid">
-      <div class="stat-card"><div class="stat-icon">📋</div><h3>12</h3><p>Jobs Near You</p><div class="stat-change">↑ 3 new today</div></div>
-      <div class="stat-card"><div class="stat-icon">⭐</div><h3 id="statTrust">72</h3><p>Trust Score</p><div class="stat-change">↑ +5 this week</div></div>
-      <div class="stat-card"><div class="stat-icon">✅</div><h3>3</h3><p>Jobs Completed</p><div class="stat-change">↑ +1 this month</div></div>
-      <div class="stat-card"><div class="stat-icon">💰</div><h3>₹4,200</h3><p>Total Earned</p><div class="stat-change">↑ Growing!</div></div>
+      <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <h3>12</h3>
+        <p data-lang="jobsNearYou">Jobs Near You</p>
+        <div class="stat-change">↑ 3 new today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <h3 id="statTrust">72</h3>
+        <p data-lang="trustScore">Trust Score</p>
+        <div class="stat-change">↑ +5 this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <h3>3</h3>
+        <p data-lang="jobsCompleted">Jobs Completed</p>
+        <div class="stat-change">↑ +1 this month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <h3>₹4,200</h3>
+        <p data-lang="totalEarned">Total Earned</p>
+        <div class="stat-change">↑ Growing!</div>
+      </div>
     </div>
 
     <!-- AI Box -->
     <div class="ai-box">
       <div class="ai-box-header">
         <span style="font-size:1.4rem">🤖</span>
-        <h3>AI Skill Advisor</h3>
+        <h3 data-lang="aiAdvisor">AI Skill Advisor</h3>
         <span class="ai-tag">POWERED BY AI</span>
       </div>
       <div id="aiResponseText">
         <span style="color:rgba(255,255,255,0.4)">Click "Ask AI" to get personalized skill and job recommendations...</span>
       </div>
       <div class="ai-input-row">
-        <input type="text" id="aiQuestion" placeholder="Ask anything... e.g. What skills should I learn to earn more?"/>
+        <input type="text" id="aiQuestion"
+          data-lang="aiPlaceholder"
+          placeholder="Ask anything... e.g. What skills should I learn to earn more?"/>
         <button class="btn btn-primary" id="aiBtn" onclick="askAI()">
-          <i class="fas fa-robot"></i> Ask AI
+          <i class="fas fa-robot"></i>
+          <span data-lang="askAI">Ask AI</span>
         </button>
       </div>
     </div>
 
+    <!-- Two Column -->
     <div class="two-col">
+
+      <!-- Nearby Jobs -->
       <div class="dash-card">
         <div class="dash-card-header">
-          <h3>📍 Nearby Jobs</h3>
-          <a href="#" style="font-size:0.82rem;color:var(--primary);font-weight:600">View All</a>
+          <h3>📍 <span data-lang="nearbyJobs">Nearby Jobs</span></h3>
+          <a href="#" style="font-size:0.82rem;color:var(--primary);font-weight:600">
+            <span data-lang="viewAll">View All</span>
+          </a>
         </div>
         <div class="dash-card-body">
           <div class="job-list" id="jobList"></div>
@@ -172,12 +249,16 @@
       </div>
 
       <div style="display:flex;flex-direction:column;gap:20px">
+
+        <!-- Status -->
         <div class="dash-card">
-          <div class="dash-card-header"><h3>🟢 My Status</h3></div>
+          <div class="dash-card-header">
+            <h3>🟢 <span data-lang="myStatus">My Status</span></h3>
+          </div>
           <div class="dash-card-body" style="padding-top:14px">
             <div class="status-toggle">
               <div>
-                <div class="st-label" id="statusLabel">Available for Work</div>
+                <div class="st-label" id="statusLabel" data-lang="availableForWork">Available for Work</div>
                 <div class="st-sub">Employers can see and contact you</div>
               </div>
               <div class="toggle-switch on" id="statusToggle" onclick="toggleStatus()"></div>
@@ -186,57 +267,89 @@
           </div>
         </div>
 
+        <!-- Alerts -->
         <div class="dash-card">
           <div class="dash-card-header">
-            <h3>🔔 Job Alerts</h3>
+            <h3>🔔 <span data-lang="jobAlerts">Job Alerts</span></h3>
             <span style="background:var(--danger);color:white;font-size:0.72rem;font-weight:700;padding:2px 8px;border-radius:50px">3 New</span>
           </div>
           <div class="dash-card-body">
             <div class="alert-list">
-              <div class="alert-item emergency"><span class="a-icon">🚨</span><div class="a-text"><strong>Emergency! Plumber Needed</strong><span>1.2km away · ₹1,200 · Right now!</span></div></div>
-              <div class="alert-item info"><span class="a-icon">📋</span><div class="a-text"><strong>New Painting Job Posted</strong><span>3km away · ₹700/day · 3 days work</span></div></div>
-              <div class="alert-item success"><span class="a-icon">⭐</span><div class="a-text"><strong>You got a 5-star rating!</strong><span>From Suresh K. · Trust Score +3</span></div></div>
+              <div class="alert-item emergency">
+                <span class="a-icon">🚨</span>
+                <div class="a-text">
+                  <strong>Emergency! Plumber Needed</strong>
+                  <span>1.2km away · ₹1,200 · Right now!</span>
+                </div>
+              </div>
+              <div class="alert-item info">
+                <span class="a-icon">📋</span>
+                <div class="a-text">
+                  <strong>New Painting Job Posted</strong>
+                  <span>3km away · ₹700/day · 3 days work</span>
+                </div>
+              </div>
+              <div class="alert-item success">
+                <span class="a-icon">⭐</span>
+                <div class="a-text">
+                  <strong>You got a 5-star rating!</strong>
+                  <span>From Suresh K. · Trust Score +3</span>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Heatmap -->
+    <div class="dash-card one-col">
+      <div class="dash-card-header">
+        <h3>🔥 <span data-lang="heatmap">Skill Demand Heatmap</span></h3>
+        <span style="font-size:0.8rem;color:var(--text-muted)" data-lang="inYourArea">In your area today</span>
+      </div>
+      <div class="dash-card-body">
+        <div class="heatmap-grid">
+          <div class="heatmap-item heat-5" onclick="showToast('Electrician: 48 open jobs near you!','info')">
+            <div class="h-icon">⚡</div><div class="h-name">Electrician</div>
+            <div class="h-bar" style="width:95%"></div><div class="h-count">48 jobs open</div>
+          </div>
+          <div class="heatmap-item heat-5" onclick="showToast('Plumber: 41 open jobs near you!','info')">
+            <div class="h-icon">🔧</div><div class="h-name">Plumber</div>
+            <div class="h-bar" style="width:85%"></div><div class="h-count">41 jobs open</div>
+          </div>
+          <div class="heatmap-item heat-4" onclick="showToast('Mason: 35 open jobs near you!','info')">
+            <div class="h-icon">🧱</div><div class="h-name">Mason</div>
+            <div class="h-bar" style="width:72%"></div><div class="h-count">35 jobs open</div>
+          </div>
+          <div class="heatmap-item heat-4" onclick="showToast('Carpenter: 28 open jobs near you!','info')">
+            <div class="h-icon">🪚</div><div class="h-name">Carpenter</div>
+            <div class="h-bar" style="width:60%"></div><div class="h-count">28 jobs open</div>
+          </div>
+          <div class="heatmap-item heat-3" onclick="showToast('Painter: 22 open jobs near you!','info')">
+            <div class="h-icon">🎨</div><div class="h-name">Painter</div>
+            <div class="h-bar" style="width:48%"></div><div class="h-count">22 jobs open</div>
+          </div>
+          <div class="heatmap-item heat-2" onclick="showToast('Driver: 18 open jobs near you!','info')">
+            <div class="h-icon">🚗</div><div class="h-name">Driver</div>
+            <div class="h-bar" style="width:38%"></div><div class="h-count">18 jobs open</div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="dash-card one-col">
-      <div class="dash-card-header">
-        <h3>🔥 Skill Demand Heatmap</h3>
-        <span style="font-size:0.8rem;color:var(--text-muted)">In your area today</span>
-      </div>
-      <div class="dash-card-body">
-        <div class="heatmap-grid">
-          <div class="heatmap-item heat-5" onclick="showToast('Electrician: 48 open jobs near you!','info')"><div class="h-icon">⚡</div><div class="h-name">Electrician</div><div class="h-bar" style="width:95%"></div><div class="h-count">48 jobs open</div></div>
-          <div class="heatmap-item heat-5" onclick="showToast('Plumber: 41 open jobs near you!','info')"><div class="h-icon">🔧</div><div class="h-name">Plumber</div><div class="h-bar" style="width:85%"></div><div class="h-count">41 jobs open</div></div>
-          <div class="heatmap-item heat-4" onclick="showToast('Mason: 35 open jobs near you!','info')"><div class="h-icon">🧱</div><div class="h-name">Mason</div><div class="h-bar" style="width:72%"></div><div class="h-count">35 jobs open</div></div>
-          <div class="heatmap-item heat-4" onclick="showToast('Carpenter: 28 open jobs near you!','info')"><div class="h-icon">🪚</div><div class="h-name">Carpenter</div><div class="h-bar" style="width:60%"></div><div class="h-count">28 jobs open</div></div>
-          <div class="heatmap-item heat-3" onclick="showToast('Painter: 22 open jobs near you!','info')"><div class="h-icon">🎨</div><div class="h-name">Painter</div><div class="h-bar" style="width:48%"></div><div class="h-count">22 jobs open</div></div>
-          <div class="heatmap-item heat-2" onclick="showToast('Driver: 18 open jobs near you!','info')"><div class="h-icon">🚗</div><div class="h-name">Driver</div><div class="h-bar" style="width:38%"></div><div class="h-count">18 jobs open</div></div>
-        </div>
-      </div>
-    </div>
   </main>
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
 <script src="script.js"></script>
+<script src="language.js"></script>
 <script>
-  checkProfileComplete()
-  // Handle Google OAuth redirect
-  // Check profile is complete before showing dashboard
-checkProfileComplete();
-const urlParams = new URLSearchParams(window.location.search);
-const googleToken = urlParams.get('token');
-const googleUser = urlParams.get('user');
-if (googleToken && googleUser) {
-  saveToken(googleToken);
-  localStorage.setItem('sn_user', JSON.parse(decodeURIComponent(googleUser)));
-  window.history.replaceState({}, '', 'dashboard.html');
-}
-  // ---- Load user ----
+  // Check profile complete
+  checkProfileComplete();
+
+  // Load user
   const user = getUser();
   if (user) {
     const name = user.name || 'User';
@@ -246,14 +359,14 @@ if (googleToken && googleUser) {
     document.getElementById('sidebarTrust').textContent = user.trustScore || 72;
     document.getElementById('statTrust').textContent = user.trustScore || 72;
     document.getElementById('headerName').textContent = name.split(' ')[0];
-    document.getElementById('navWelcome').textContent = 'Welcome, ' + name.split(' ')[0] + '!';
+    document.getElementById('navWelcome').textContent = SkillNovaLang.t('welcome') + ', ' + name.split(' ')[0] + '!';
     document.getElementById('headerSub').textContent = user.role === 'employer'
       ? 'Manage your job postings and find the right workers.'
       : 'Here\'s what\'s happening near ' + (user.location || 'your area') + ' today.';
     if (user.role === 'worker') document.getElementById('postJobLink').style.display = 'none';
   }
 
-  // ---- Nearby Jobs ----
+  // Nearby Jobs
   const nearbyJobs = [
     { icon: '🔧', title: 'Plumber Needed', employer: 'Rajesh Home', price: '₹800/day', dist: '0.8 km', match: 95, matchClass: 'match-high' },
     { icon: '⚡', title: 'Electrician Required', employer: 'Kumar Builders', price: '₹1,000/day', dist: '1.5 km', match: 88, matchClass: 'match-high' },
@@ -262,49 +375,65 @@ if (googleToken && googleUser) {
   ];
   const jobList = document.getElementById('jobList');
   nearbyJobs.forEach(job => {
-    jobList.innerHTML += `<div class="job-item" onclick="showToast('Opening: ${job.title}','info')">
-      <div class="job-avatar" style="background:var(--primary-light)">${job.icon}</div>
-      <div class="job-info"><h4>${job.title}</h4><p>${job.employer} · <span class="match-score ${job.matchClass}">${job.match}% match</span></p></div>
-      <div class="job-meta"><div class="price">${job.price}</div><div class="distance">📍 ${job.dist}</div></div>
-    </div>`;
+    jobList.innerHTML += `
+      <div class="job-item" onclick="showToast('Opening: ${job.title}','info')">
+        <div class="job-avatar" style="background:var(--primary-light)">${job.icon}</div>
+        <div class="job-info">
+          <h4>${job.title}</h4>
+          <p>${job.employer} · <span class="match-score ${job.matchClass}">${job.match}% match</span></p>
+        </div>
+        <div class="job-meta">
+          <div class="price">${job.price}</div>
+          <div class="distance">📍 ${job.dist}</div>
+        </div>
+      </div>`;
   });
 
-  // ---- Status Toggle ----
+  // Status Toggle
   let isAvailable = true;
   function toggleStatus() {
     isAvailable = !isAvailable;
     document.getElementById('statusToggle').classList.toggle('on', isAvailable);
-    document.getElementById('statusLabel').textContent = isAvailable ? 'Available for Work' : 'Currently Busy 🔴';
-    showToast(isAvailable ? 'Status: Available 🟢' : 'Status: Busy 🔴', isAvailable ? 'success' : 'warning');
+    const label = document.getElementById('statusLabel');
+    if (isAvailable) {
+      label.setAttribute('data-lang', 'availableForWork');
+      label.textContent = SkillNovaLang.t('availableForWork');
+    } else {
+      label.removeAttribute('data-lang');
+      label.textContent = SkillNovaLang.t('currentlyBusy');
+    }
+    showToast(isAvailable ? SkillNovaLang.t('statusAvailable') : SkillNovaLang.t('statusBusy'),
+              isAvailable ? 'success' : 'warning');
   }
 
-  // ---- Logout ----
+  // Logout
   function handleLogout() {
     localStorage.removeItem('sn_user');
+    localStorage.removeItem('sn_token');
     showToast('Logged out!', 'info');
     setTimeout(() => window.location.href = 'index.html', 1000);
   }
 
-  // ---- AI Function ----
-  // Tries real backend first, falls back to smart mock if server not running
+  // AI Function with NLP Language Support
   async function askAI() {
     const question = document.getElementById('aiQuestion').value.trim();
     const box = document.getElementById('aiResponseText');
     const btn = document.getElementById('aiBtn');
     const skills = user?.skills?.join(', ') || 'general worker';
-    const location = user?.location || 'Tamil Nadu, India';
+    const location = user?.location || 'Telangana, India';
 
     btn.innerHTML = '<span class="spinner"></span>';
     btn.disabled = true;
-    box.innerHTML = '<span style="color:rgba(255,255,255,0.4)">🤖 Thinking...</span>';
+    box.innerHTML = '<span style="color:rgba(255,255,255,0.4)">🤖 ' +
+      (SkillNovaLang.current === 'te' ? 'ఆలోచిస్తోంది...' : 'Thinking...') + '</span>';
 
-    const prompt = question
-      ? `You are an AI advisor for SkillNova, a job platform for rural workers in India. Worker skills: ${skills}. Location: ${location}. Answer in 3-4 friendly simple lines: ${question}`
-      : `You are an AI advisor for SkillNova. Worker skills: ${skills}. Location: ${location}. Give 3 specific skill recommendations to boost their income. Be brief, friendly, use bullet points.`;
+    // Use NLP to build prompt with language detection
+    const inputText = question || `Give 3 skill recommendations for worker with skills: ${skills} in ${location}`;
+    const { prompt } = SkillNovaLang.buildPrompt(inputText, skills, location);
 
-    // Try real backend server first
+    // Try real backend first
     try {
-      const res = await fetch('http://127.0.0.1:3000/api/ai', {
+      const res = await fetch(API_URL + '/api/ai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt })
@@ -313,60 +442,51 @@ if (googleToken && googleUser) {
         const data = await res.json();
         const text = data.response || 'No response from AI.';
         box.innerHTML = text.replace(/\n/g, '<br/>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        btn.innerHTML = '<i class="fas fa-robot"></i> Ask AI';
+        btn.innerHTML = '<i class="fas fa-robot"></i> <span data-lang="askAI">' + SkillNovaLang.t('askAI') + '</span>';
         btn.disabled = false;
         document.getElementById('aiQuestion').value = '';
         return;
       }
-    } catch (e) {
-      // Server not running — use smart mock below
-    }
+    } catch (e) { /* fallback below */ }
 
-    // Smart Mock AI (fallback when server is off)
-    await new Promise(resolve => setTimeout(resolve, 1800));
-
+    // Smart fallback with language support
+    await new Promise(r => setTimeout(r, 1500));
+    const lang = SkillNovaLang.current;
     const responses = {
-      skill: `Based on your skills (${skills}) in ${location}, here are my top recommendations:<br/><br/>
-      ⭐ <strong>Learn Basic Electrical Work</strong> — Electricians earn ₹800–₹1,500/day and demand is very high.<br/>
-      ⭐ <strong>Add Waterproofing Skills</strong> — High demand in monsoon season, pays ₹1,000+/day.<br/>
-      ⭐ <strong>Get a Safety Certificate</strong> — Certified workers get hired 3x faster and earn 40% more.`,
-
-      job: `Here are the best job opportunities near ${location} right now:<br/><br/>
-      📍 <strong>Electrician</strong> — 48 open jobs · ₹800–1,200/day · High demand 🔥<br/>
-      📍 <strong>Plumber</strong> — 41 open jobs · ₹700–1,000/day · Urgent requests available<br/>
-      📍 <strong>Mason</strong> — 35 open jobs · ₹600–900/day · Construction season is peak now`,
-
-      earn: `Here's how workers in ${location} are increasing their income:<br/><br/>
-      💰 <strong>Build your Trust Score to 85+</strong> — Top-rated workers earn 50% more.<br/>
-      💰 <strong>Be available on weekends</strong> — Weekend jobs pay 20–30% extra.<br/>
-      💰 <strong>Accept emergency requests</strong> — Emergency jobs pay ₹1,200–₹2,000/day.`,
-
-      default: `Hello! Based on your profile with skills in <strong>${skills}</strong>, here are my AI recommendations for you in ${location}:<br/><br/>
-      🤖 <strong>Top Skill to Learn:</strong> Electrician work is in highest demand in your area right now.<br/>
-      🤖 <strong>Best Time to Work:</strong> Morning slots (7AM–12PM) get 2x more job requests.<br/>
-      🤖 <strong>Trust Score Tip:</strong> Complete 2 more jobs this week to reach Trust Score 80+ and get priority matching!`
+      en: {
+        skill: `⭐ Top skills in demand:\n\n• Electrician — 48 jobs, ₹800–1,500/day 🔥\n• Waterproofing — High monsoon demand\n• Safety Certificate — Earn 40% more`,
+        job: `📍 High demand jobs near you:\n\n• Electrician — 48 jobs 🔥\n• Plumber — 41 jobs\n• Mason — 35 jobs`,
+        earn: `💰 Ways to earn more:\n\n• Trust Score 85+ → earn 50% more\n• Available weekends → 20-30% extra\n• Emergency jobs → ₹1,200–₹2,000/day`,
+        default: `🤖 Based on your profile:\n\n• Your skills are in high demand!\n• 12 jobs match within 5km\n• Update your status daily for more alerts`
+      },
+      te: {
+        skill: `⭐ అధిక డిమాండ్ నైపుణ్యాలు:\n\n• ఎలక్ట్రీషియన్ — 48 పనులు, ₹800–1,500/రోజు 🔥\n• వాటర్‌ప్రూఫింగ్ — వర్షాకాల డిమాండ్\n• సేఫ్టీ సర్టిఫికెట్ — 40% ఎక్కువ సంపాదన`,
+        job: `📍 మీ దగ్గర అధిక డిమాండ్ పనులు:\n\n• ఎలక్ట్రీషియన్ — 48 పనులు 🔥\n• ప్లంబర్ — 41 పనులు\n• మేసన్ — 35 పనులు`,
+        earn: `💰 ఎక్కువ సంపాదించే మార్గాలు:\n\n• ట్రస్ట్ స్కోర్ 85+ → 50% ఎక్కువ\n• వీకెండ్‌లలో అందుబాటులో ఉండండి → 20-30% అదనంగా\n• అత్యవసర పనులు → ₹1,200–₹2,000/రోజు`,
+        default: `🤖 మీ ప్రొఫైల్ ఆధారంగా:\n\n• మీ నైపుణ్యాలకు అధిక డిమాండ్ ఉంది!\n• 5km లోపల 12 పనులు మీకు సరిపోతాయి\n• రోజూ మీ స్థితి అప్‌డేట్ చేయండి`
+      }
     };
 
-    let response = responses.default;
-    if (question) {
-      const q = question.toLowerCase();
-      if (q.includes('skill') || q.includes('learn')) response = responses.skill;
-      else if (q.includes('job') || q.includes('work') || q.includes('find')) response = responses.job;
-      else if (q.includes('earn') || q.includes('money') || q.includes('income') || q.includes('salary')) response = responses.earn;
-      else response = `Great question! Based on your profile in <strong>${location}</strong>:<br/><br/>
-      🤖 Your skills in <strong>${skills}</strong> are in demand right now.<br/>
-      🤖 There are <strong>12 jobs</strong> matching your profile within 5km.<br/>
-      🤖 Tip: Update your availability status daily to get more job alerts!`;
-    }
+    const q = question.toLowerCase();
+    const r = responses[lang] || responses.en;
+    let response = r.default;
+    if (q.includes('skill') || q.includes('learn') || q.includes('నైపుణ్య') || q.includes('నేర్చు')) response = r.skill;
+    else if (q.includes('job') || q.includes('work') || q.includes('పని') || q.includes('ఉద్యోగ')) response = r.job;
+    else if (q.includes('earn') || q.includes('money') || q.includes('సంపాద') || q.includes('డబ్బు')) response = r.earn;
 
-    box.innerHTML = response;
-    btn.innerHTML = '<i class="fas fa-robot"></i> Ask AI';
+    box.innerHTML = response.replace(/\n/g, '<br/>');
+    btn.innerHTML = '<i class="fas fa-robot"></i> <span data-lang="askAI">' + SkillNovaLang.t('askAI') + '</span>';
     btn.disabled = false;
     document.getElementById('aiQuestion').value = '';
   }
 
-  document.getElementById('aiQuestion').addEventListener('keypress', e => { if (e.key === 'Enter') askAI(); });
-  window.addEventListener('load', () => { if (user) setTimeout(askAI, 1200); });
+  document.getElementById('aiQuestion').addEventListener('keypress', e => {
+    if (e.key === 'Enter') askAI();
+  });
+
+  window.addEventListener('load', () => {
+    if (user) setTimeout(askAI, 1200);
+  });
 </script>
 </body>
 </html>

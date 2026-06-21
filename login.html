@@ -8,7 +8,18 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
 <body>
-
+<nav class="navbar" id="navbar">
+  <div class="nav-logo">
+    <div class="nav-logo-icon">⚡</div>
+    Skill<span>Nova</span>
+  </div>
+  <button id="langToggle"
+    class="btn btn-outline"
+    style="padding:7px 14px;font-size:0.85rem"
+    onclick="SkillNovaLang.switch(SkillNovaLang.current==='en'?'te':'en')">
+    🌐 తెలుగు
+  </button>
+</nav>
 <div class="auth-page">
 
   <!-- ===== LEFT PANEL ===== -->
@@ -121,6 +132,7 @@
 
 <div class="toast-container" id="toastContainer"></div>
 <script src="script.js"></script>
+<script src="language.js"></script>
 <script>
   // Role card selection
   document.querySelectorAll('.role-card').forEach(card => {

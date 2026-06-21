@@ -11,6 +11,12 @@
 
   <!-- ===== NAVBAR ===== -->
   <nav class="navbar" id="navbar">
+    <button id="langToggle"
+  class="btn btn-outline"
+  style="padding:7px 14px;font-size:0.85rem"
+  onclick="SkillNovaLang.switch(SkillNovaLang.current==='en'?'te':'en')">
+  🌐 తెలుగు
+</button>
     <div class="nav-logo">
       <div class="nav-logo-icon">⚡</div>
       Skill<span>Nova</span>
@@ -293,5 +299,6 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <script src="script.js"></script>
+  <script src="language.js"></script>
 </body>
 </html>
