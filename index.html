@@ -9,74 +9,73 @@
 </head>
 <body>
 
-  <!-- ===== NAVBAR ===== -->
+  <!-- NAVBAR -->
   <nav class="navbar" id="navbar">
-    <button id="langToggle"
-  class="btn btn-outline"
-  style="padding:7px 14px;font-size:0.85rem"
-  onclick="SkillNovaLang.switch(SkillNovaLang.current==='en'?'te':'en')">
-  🌐 తెలుగు
-</button>
     <div class="nav-logo">
       <div class="nav-logo-icon">⚡</div>
       Skill<span>Nova</span>
     </div>
     <ul class="nav-links">
-      <li><a href="#how">How It Works</a></li>
-      <li><a href="#features">Features</a></li>
-      <li><a href="#about">About</a></li>
+      <li><a href="#how" data-lang="howItWorks">How It Works</a></li>
+      <li><a href="#features" data-lang="features">Features</a></li>
+      <li><a href="#about" data-lang="about">About</a></li>
     </ul>
     <div class="nav-actions">
-      <a href="login.html" class="btn btn-outline">Log In</a>
-      <a href="register.html" class="btn btn-primary">Get Started</a>
+      <button id="langToggle"
+        class="btn btn-outline"
+        style="padding:7px 14px;font-size:0.82rem"
+        onclick="SkillNovaLang.switch(SkillNovaLang.current==='en'?'te':'en')">
+        🌐 తెలుగు
+      </button>
+      <a href="login.html" class="btn btn-outline" data-lang="login">Log In</a>
+      <a href="register.html" class="btn btn-primary" data-lang="getStarted">Get Started</a>
     </div>
   </nav>
 
-  <!-- ===== HERO ===== -->
+  <!-- HERO -->
   <section class="hero">
     <div class="hero-grid">
-
-      <!-- Left: Text -->
       <div class="hero-content">
         <div class="hero-badge">
           <span class="dot"></span>
           AI-Powered Job Platform for Everyone
         </div>
         <h1 class="hero-title">
-          Find Work.<br/>
-          Build Skills.<br/>
-          <span class="highlight">Grow Together.</span>
+          <span data-lang="heroTitle1">Find Work.</span><br/>
+          <span data-lang="heroTitle2">Build Skills.</span><br/>
+          <span class="highlight" data-lang="heroTitle3">Grow Together.</span>
         </h1>
-        <p class="hero-desc">
+        <p class="hero-desc" data-lang="heroDesc">
           SkillNova connects skilled and unskilled workers in rural and semi-urban areas with verified job opportunities — powered by AI matching, trust scores, and real-time demand insights.
         </p>
         <div class="hero-actions">
           <a href="register.html" class="btn btn-primary btn-lg">
-            <i class="fas fa-rocket"></i> Join as Worker
+            <i class="fas fa-rocket"></i>
+            <span data-lang="joinWorker">Join as Worker</span>
           </a>
           <a href="register.html?role=employer" class="btn btn-accent btn-lg">
-            <i class="fas fa-briefcase"></i> Post a Job
+            <i class="fas fa-briefcase"></i>
+            <span data-lang="postJobBtn">Post a Job</span>
           </a>
         </div>
         <div class="hero-stats">
           <div class="hero-stat">
             <h3>10K+</h3>
-            <p>Workers Ready</p>
+            <p data-lang="workersReady">Workers Ready</p>
           </div>
           <div class="hero-stat">
             <h3>500+</h3>
-            <p>Jobs Posted</p>
+            <p data-lang="jobsPosted">Jobs Posted</p>
           </div>
           <div class="hero-stat">
             <h3>50+</h3>
-            <p>Skill Types</p>
+            <p data-lang="skillTypes">Skill Types</p>
           </div>
         </div>
       </div>
 
-      <!-- Right: Cards Visual -->
+      <!-- Hero Cards -->
       <div class="hero-visual">
-        <!-- Card 1: AI Match -->
         <div class="hero-card">
           <div class="hero-card-header">
             <div class="hero-card-icon blue">🤖</div>
@@ -86,15 +85,11 @@
             </div>
           </div>
           <div class="trust-score">
-            <span style="font-size:0.8rem;color:rgba(255,255,255,0.5)">Trust Score</span>
-            <div class="trust-bar">
-              <div class="trust-fill" style="width:87%"></div>
-            </div>
+            <span style="font-size:0.8rem;color:rgba(255,255,255,0.5)" data-lang="trustScore">Trust Score</span>
+            <div class="trust-bar"><div class="trust-fill" style="width:87%"></div></div>
             <span class="trust-pct">87%</span>
           </div>
         </div>
-
-        <!-- Card 2: Demand Heatmap -->
         <div class="hero-card">
           <div class="hero-card-header">
             <div class="hero-card-icon orange">🔥</div>
@@ -109,8 +104,6 @@
             <span style="background:rgba(16,185,129,0.2);color:#34d399;padding:4px 10px;border-radius:50px;font-size:0.78rem;font-weight:600">🎨 Painter</span>
           </div>
         </div>
-
-        <!-- Card 3: Skill Exchange -->
         <div class="hero-card">
           <div class="hero-card-header">
             <div class="hero-card-icon green">🤝</div>
@@ -125,139 +118,77 @@
           </div>
         </div>
       </div>
-
     </div>
   </section>
 
-  <!-- ===== HOW IT WORKS ===== -->
+  <!-- HOW IT WORKS -->
   <section class="section" id="how">
     <div class="section-header">
-      <div class="section-tag">How It Works</div>
+      <div class="section-tag" data-lang="howItWorks">How It Works</div>
       <h2 class="section-title">From Sign Up to Getting Paid<br/>in 5 Simple Steps</h2>
-      <p class="section-subtitle">SkillNova makes it easy for workers and employers to connect, verify, and complete work — all in one place.</p>
+      <p class="section-subtitle">SkillNova makes it easy for workers and employers to connect, verify, and complete work.</p>
     </div>
-
     <div class="how-grid">
-      <div class="how-card">
-        <div class="how-icon">📝</div>
-        <div class="how-number">01</div>
-        <h3>Register & Create Profile</h3>
-        <p>Sign up as Worker or Employer. Add your skills, location, pricing, and availability.</p>
-      </div>
-      <div class="how-card">
-        <div class="how-icon">🤖</div>
-        <div class="how-number">02</div>
-        <h3>AI Verification & Trust Score</h3>
-        <p>Our AI checks your profile, verifies image authenticity, and assigns you a Trust Score.</p>
-      </div>
-      <div class="how-card">
-        <div class="how-icon">🔍</div>
-        <div class="how-number">03</div>
-        <h3>Smart Job Matching</h3>
-        <p>AI matches you with nearby jobs based on your skills, location, and trust score.</p>
-      </div>
-      <div class="how-card">
-        <div class="how-icon">💬</div>
-        <div class="how-number">04</div>
-        <h3>Chat & Accept Work</h3>
-        <p>Chat directly with employers, agree on pricing, accept the job and start working.</p>
-      </div>
-      <div class="how-card">
-        <div class="how-icon">⭐</div>
-        <div class="how-number">05</div>
-        <h3>Get Rated & Build Portfolio</h3>
-        <p>Complete the job, get rated, and watch your Trust Score and portfolio grow.</p>
-      </div>
+      <div class="how-card"><div class="how-icon">📝</div><div class="how-number">01</div><h3>Register & Create Profile</h3><p>Sign up as Worker or Employer. Add your skills, location, pricing, and availability.</p></div>
+      <div class="how-card"><div class="how-icon">🤖</div><div class="how-number">02</div><h3>AI Verification & Trust Score</h3><p>Our AI checks your profile and assigns you a Trust Score automatically.</p></div>
+      <div class="how-card"><div class="how-icon">🔍</div><div class="how-number">03</div><h3>Smart Job Matching</h3><p>AI matches you with nearby jobs based on your skills, location, and trust score.</p></div>
+      <div class="how-card"><div class="how-icon">💬</div><div class="how-number">04</div><h3>Chat & Accept Work</h3><p>Chat directly with employers, agree on pricing, accept the job and start working.</p></div>
+      <div class="how-card"><div class="how-icon">⭐</div><div class="how-number">05</div><h3>Get Rated & Build Portfolio</h3><p>Complete the job, get rated, and watch your Trust Score and portfolio grow.</p></div>
     </div>
   </section>
 
-  <!-- ===== FEATURES ===== -->
+  <!-- FEATURES -->
   <section class="section section-dark" id="features">
     <div class="section-header">
-      <div class="section-tag">Platform Features</div>
+      <div class="section-tag" data-lang="features">Platform Features</div>
       <h2 class="section-title" style="color:white">Everything You Need<br/>In One Platform</h2>
       <p class="section-subtitle">Built specifically for workers and employers in rural and semi-urban India.</p>
     </div>
-
     <div class="features-grid">
-      <div class="feature-card">
-        <span class="feature-icon">🗺️</span>
-        <h3>Demand Heatmap</h3>
-        <p>See which skills are in high demand in your area through a live visual heatmap.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feature-icon">🤖</span>
-        <h3>AI Skill Recommendations</h3>
-        <p>Gemini AI analyzes your profile and suggests the best skills to learn for maximum income.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feature-icon">⭐</span>
-        <h3>Trust Score System</h3>
-        <p>AI-powered trust scores based on ratings, job history, and profile authenticity.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feature-icon">🚨</span>
-        <h3>Emergency Work Requests</h3>
-        <p>Workers get instant alerts for urgent nearby jobs — respond and earn within minutes.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feature-icon">💬</span>
-        <h3>In-App Chat</h3>
-        <p>Secure direct messaging between worker and employer — no phone number sharing needed.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feature-icon">🤝</span>
-        <h3>Peer Skill Exchange</h3>
-        <p>Teach one skill, learn another. Collaborative time-based skill exchange between workers.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feature-icon">📁</span>
-        <h3>Digital Portfolio</h3>
-        <p>Build your work history with completed jobs, ratings, and uploaded work images.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feature-icon">🌐</span>
-        <h3>Multi-Language & Offline</h3>
-        <p>Supports local languages and works in low-connectivity areas for maximum accessibility.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feature-icon">🛡️</span>
-        <h3>AI Fraud Detection</h3>
-        <p>Automatically detects fake profiles and suspicious job postings to keep the platform safe.</p>
-      </div>
+      <div class="feature-card"><span class="feature-icon">🗺️</span><h3>Demand Heatmap</h3><p>See which skills are in high demand in your area through a live visual heatmap.</p></div>
+      <div class="feature-card"><span class="feature-icon">🤖</span><h3>AI Skill Recommendations</h3><p>Groq AI analyzes your profile and suggests the best skills to learn for maximum income.</p></div>
+      <div class="feature-card"><span class="feature-icon">⭐</span><h3>Trust Score System</h3><p>AI-powered trust scores based on ratings, job history, and profile authenticity.</p></div>
+      <div class="feature-card"><span class="feature-icon">🚨</span><h3>Emergency Work Requests</h3><p>Workers get instant alerts for urgent nearby jobs — respond and earn within minutes.</p></div>
+      <div class="feature-card"><span class="feature-icon">💬</span><h3>In-App Chat</h3><p>Secure direct messaging between worker and employer — no phone number sharing needed.</p></div>
+      <div class="feature-card"><span class="feature-icon">🤝</span><h3>Peer Skill Exchange</h3><p>Teach one skill, learn another. Collaborative time-based skill exchange between workers.</p></div>
+      <div class="feature-card"><span class="feature-icon">📁</span><h3>Digital Portfolio</h3><p>Build your work history with completed jobs, ratings, and uploaded work images.</p></div>
+      <div class="feature-card"><span class="feature-icon">🌐</span><h3>Multi-Language & Offline</h3><p>Supports Telugu & English. Works in low-connectivity areas for maximum accessibility.</p></div>
+      <div class="feature-card"><span class="feature-icon">🛡️</span><h3>AI Fraud Detection</h3><p>Automatically detects fake profiles and suspicious job postings to keep the platform safe.</p></div>
     </div>
   </section>
 
-  <!-- ===== ABOUT ===== -->
+  <!-- ABOUT -->
   <section class="section" id="about" style="background:var(--primary-light)">
     <div style="max-width:800px;margin:0 auto;text-align:center">
-      <div class="section-tag">About SkillNova</div>
+      <div class="section-tag" data-lang="about">About SkillNova</div>
       <h2 class="section-title">A Unified Platform for<br/>Decent Work & Economic Growth</h2>
       <p style="font-size:1rem;color:var(--text-light);line-height:1.8;margin-top:1rem">
-        SkillNova was built as part of a Community Service Project (CSP) to address the lack of employment opportunities and skill access for workers in rural and semi-urban areas of India. By leveraging AI technology and digital connectivity, we aim to bridge the gap between skilled workers and employers — ensuring fair wages, transparent pricing, and inclusive economic growth for all.
+        SkillNova was built as part of a Community Service Project (CSP) to address the lack of employment opportunities and skill access for workers in rural and semi-urban areas of India. By leveraging AI technology and digital connectivity, we aim to bridge the gap between skilled workers and employers.
       </p>
       <div style="margin-top:2rem;display:flex;justify-content:center;gap:1rem;flex-wrap:wrap">
-        <a href="register.html" class="btn btn-primary btn-lg">Join SkillNova Free</a>
-        <a href="login.html" class="btn btn-outline btn-lg">Already a Member?</a>
+        <a href="register.html" class="btn btn-primary btn-lg" data-lang="getStarted">Get Started Free</a>
+        <a href="login.html" class="btn btn-outline btn-lg" data-lang="login">Already a Member?</a>
       </div>
     </div>
   </section>
 
-  <!-- ===== CTA ===== -->
+  <!-- CTA -->
   <section class="cta-section">
     <h2>Ready to Find Work or Hire Workers?</h2>
     <p>Join thousands of workers and employers already using SkillNova</p>
     <div class="cta-buttons">
       <a href="register.html" class="btn btn-white btn-lg">
-        <i class="fas fa-user-plus"></i> Register as Worker
+        <i class="fas fa-user-plus"></i>
+        <span data-lang="joinWorker">Register as Worker</span>
       </a>
       <a href="register.html?role=employer" class="btn btn-lg" style="background:rgba(255,255,255,0.15);color:white;border:2px solid rgba(255,255,255,0.4)">
-        <i class="fas fa-briefcase"></i> Register as Employer
+        <i class="fas fa-briefcase"></i>
+        <span data-lang="postJobBtn">Register as Employer</span>
       </a>
     </div>
   </section>
 
-  <!-- ===== FOOTER ===== -->
+  <!-- FOOTER -->
   <footer>
     <div class="footer-top">
       <div class="footer-brand">
@@ -269,17 +200,17 @@
       </div>
       <div class="footer-col">
         <h4>Platform</h4>
-        <a href="#">Find Jobs</a>
-        <a href="#">Post a Job</a>
-        <a href="#">Skill Exchange</a>
-        <a href="#">Dashboard</a>
+        <a href="#" data-lang="findJobs">Find Jobs</a>
+        <a href="#" data-lang="postJob">Post a Job</a>
+        <a href="#" data-lang="skillExchange">Skill Exchange</a>
+        <a href="#" data-lang="dashboard">Dashboard</a>
       </div>
       <div class="footer-col">
         <h4>Workers</h4>
         <a href="#">Create Profile</a>
         <a href="#">Skill Suggestions</a>
-        <a href="#">Trust Score</a>
-        <a href="#">Portfolio</a>
+        <a href="#" data-lang="trustScore">Trust Score</a>
+        <a href="#" data-lang="myPortfolio">Portfolio</a>
       </div>
       <div class="footer-col">
         <h4>Support</h4>
@@ -295,10 +226,13 @@
     </div>
   </footer>
 
-  <!-- ===== TOAST CONTAINER ===== -->
   <div class="toast-container" id="toastContainer"></div>
-
   <script src="script.js"></script>
   <script src="language.js"></script>
+  <script>
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
 </body>
 </html>

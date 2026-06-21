@@ -8,21 +8,29 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
 <body>
-<nav class="navbar" id="navbar">
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar" style="position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:70px;">
   <div class="nav-logo">
     <div class="nav-logo-icon">⚡</div>
     Skill<span>Nova</span>
   </div>
-  <button id="langToggle"
-    class="btn btn-outline"
-    style="padding:7px 14px;font-size:0.85rem"
-    onclick="SkillNovaLang.switch(SkillNovaLang.current==='en'?'te':'en')">
-    🌐 తెలుగు
-  </button>
+  <div style="display:flex;align-items:center;gap:10px">
+    <button id="langToggle"
+      class="btn btn-outline"
+      style="padding:7px 14px;font-size:0.82rem"
+      onclick="SkillNovaLang.switch(SkillNovaLang.current==='en'?'te':'en')">
+      🌐 తెలుగు
+    </button>
+    <a href="register.html" class="btn btn-primary" style="padding:7px 16px;font-size:0.85rem">
+      <span data-lang="getStarted">Get Started</span>
+    </a>
+  </div>
 </nav>
-<div class="auth-page">
 
-  <!-- ===== LEFT PANEL ===== -->
+<div class="auth-page" style="padding-top:70px">
+
+  <!-- LEFT PANEL -->
   <div class="auth-left">
     <div class="auth-left-content">
       <div class="nav-logo" style="justify-content:center;color:white;font-size:1.8rem">
@@ -31,29 +39,16 @@
       </div>
       <h2>Welcome Back!</h2>
       <p>Log in to access your dashboard, find nearby jobs, and manage your work — all in one place.</p>
-
       <div class="auth-features">
-        <div class="auth-feat-item">
-          <div class="feat-icon">📍</div>
-          <span>See nearby jobs based on your location</span>
-        </div>
-        <div class="auth-feat-item">
-          <div class="feat-icon">🤖</div>
-          <span>Get AI-powered job matches instantly</span>
-        </div>
-        <div class="auth-feat-item">
-          <div class="feat-icon">⭐</div>
-          <span>Track your Trust Score and portfolio</span>
-        </div>
-        <div class="auth-feat-item">
-          <div class="feat-icon">💬</div>
-          <span>Chat directly with employers</span>
-        </div>
+        <div class="auth-feat-item"><div class="feat-icon">📍</div><span>See nearby jobs based on your location</span></div>
+        <div class="auth-feat-item"><div class="feat-icon">🤖</div><span>Get AI-powered job matches instantly</span></div>
+        <div class="auth-feat-item"><div class="feat-icon">⭐</div><span>Track your Trust Score and portfolio</span></div>
+        <div class="auth-feat-item"><div class="feat-icon">💬</div><span>Chat directly with employers</span></div>
       </div>
     </div>
   </div>
 
-  <!-- ===== RIGHT PANEL (FORM) ===== -->
+  <!-- RIGHT PANEL -->
   <div class="auth-right">
     <div class="auth-form-box">
 
@@ -62,40 +57,43 @@
         SkillNova
       </div>
 
-      <h1>Log In</h1>
-      <p class="sub">Don't have an account? <a href="register.html">Sign up free →</a></p>
+      <h1 data-lang="loginTitle">Log In</h1>
+      <p class="sub">
+        <span data-lang="loginSub">Don't have an account?</span>
+        <a href="register.html" data-lang="signUpFree"> Sign up free →</a>
+      </p>
 
       <!-- Role Selector -->
       <div class="role-selector">
         <label class="role-card selected" id="roleWorker">
           <input type="radio" name="loginRole" value="worker" checked/>
           <span class="role-icon">👷</span>
-          <span class="role-name">Worker</span>
-          <span class="role-desc">Find jobs near me</span>
+          <span class="role-name" data-lang="worker">Worker</span>
+          <span class="role-desc" data-lang="findJobsNearMe">Find jobs near me</span>
         </label>
         <label class="role-card" id="roleEmployer">
           <input type="radio" name="loginRole" value="employer"/>
           <span class="role-icon">🧑‍💼</span>
-          <span class="role-name">Employer</span>
-          <span class="role-desc">Hire workers</span>
+          <span class="role-name" data-lang="employer">Employer</span>
+          <span class="role-desc" data-lang="hireWorkers">Hire workers</span>
         </label>
       </div>
 
       <!-- Email -->
       <div class="form-group">
-        <label>Email Address</label>
+        <label data-lang="emailAddress">Email Address</label>
         <div class="input-wrap">
           <i class="fas fa-envelope icon"></i>
-          <input type="email" id="loginEmail" placeholder="yourname@example.com"/>
+          <input type="email" id="loginEmail" data-lang="emailPlaceholder" placeholder="yourname@example.com"/>
         </div>
       </div>
 
       <!-- Password -->
       <div class="form-group">
-        <label>Password</label>
+        <label data-lang="password">Password</label>
         <div class="input-wrap">
           <i class="fas fa-lock icon"></i>
-          <input type="password" id="loginPassword" placeholder="Enter your password"/>
+          <input type="password" id="loginPassword" data-lang="passwordPlaceholder" placeholder="Enter your password"/>
           <button class="eye-btn" onclick="togglePassword('loginPassword', this)">
             <i class="fas fa-eye"></i>
           </button>
@@ -106,24 +104,27 @@
       <div class="form-options">
         <label class="form-check" style="margin:0">
           <input type="checkbox" id="rememberMe"/>
-          <label for="rememberMe" style="margin:0">Remember me</label>
+          <label for="rememberMe" style="margin:0" data-lang="rememberMe">Remember me</label>
         </label>
-        <a href="#" class="forgot-link">Forgot password?</a>
+        <a href="#" class="forgot-link" data-lang="forgotPassword">Forgot password?</a>
       </div>
 
       <!-- Submit -->
       <button class="btn btn-primary btn-full btn-lg" id="loginBtn" onclick="handleLogin()">
-        <i class="fas fa-sign-in-alt"></i> Log In to SkillNova
+        <i class="fas fa-sign-in-alt"></i>
+        <span data-lang="loginBtn">Log In to SkillNova</span>
       </button>
 
-      <div class="form-divider">or continue with</div>
+      <div class="form-divider" data-lang="orContinueWith">or continue with</div>
 
-      <button class="btn btn-full" style="border:1.5px solid var(--border);background:white;color:var(--text);font-size:0.95rem;padding:11px" onclick="window.location.href='https://skillnova-oo01.onrender.com/auth/google'">
-        <img src="https://www.google.com/favicon.ico" style="width:18px;height:18px"/> &nbsp; Continue with Google
+      <button class="btn btn-full" style="border:1.5px solid var(--border);background:white;color:var(--text);font-size:0.95rem;padding:11px"
+        onclick="window.location.href=API_URL+'/auth/google'">
+        <img src="https://www.google.com/favicon.ico" style="width:18px;height:18px"/>
+        &nbsp; <span data-lang="continueGoogle">Continue with Google</span>
       </button>
 
       <p style="text-align:center;margin-top:1.5rem;font-size:0.85rem;color:var(--text-muted)">
-        By logging in, you agree to our <a href="#" style="color:var(--primary)">Terms of Service</a> and <a href="#" style="color:var(--primary)">Privacy Policy</a>
+        By logging in, you agree to our <a href="#" style="color:var(--primary)">Terms of Service</a>
       </p>
 
     </div>
@@ -142,55 +143,44 @@
     });
   });
 
-async function handleLogin() {
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value.trim();
-  const role = document.querySelector('input[name="loginRole"]:checked').value;
+  async function handleLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+    if (!email) { showToast('Please enter your email address', 'error'); return; }
+    if (!password) { showToast('Please enter your password', 'error'); return; }
 
-  if (!email) { showToast('Please enter your email', 'error'); return; }
-  if (!password) { showToast('Please enter your password', 'error'); return; }
+    const btn = document.getElementById('loginBtn');
+    btn.innerHTML = '<span class="spinner"></span> ' + SkillNovaLang.t('loading');
+    btn.disabled = true;
 
-  const btn = document.getElementById('loginBtn');
-  btn.innerHTML = '<span class="spinner"></span> Logging in...';
-  btn.disabled = true;
-
-  try {
-    const data = await apiCall('/api/login', 'POST', { email, password });
-
-    if (data.error) {
-      showToast(data.error, 'error');
-      btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Log In to SkillNova';
+    try {
+      const data = await apiCall('/api/login', 'POST', { email, password });
+      if (data.error) {
+        showToast(data.error, 'error');
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> <span data-lang="loginBtn">' + SkillNovaLang.t('loginBtn') + '</span>';
+        btn.disabled = false;
+        return;
+      }
+      saveToken(data.token);
+      localStorage.setItem('sn_user', JSON.stringify({ ...data.user, trustScore: data.user.trustScore }));
+      showToast('Login successful! 🎉', 'success');
+      setTimeout(() => {
+        window.location.href = data.profileComplete ? 'dashboard.html' : 'setup.html';
+      }, 1000);
+    } catch (err) {
+      showToast('Cannot connect to server. Is it running?', 'error');
+      btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> ' + SkillNovaLang.t('loginBtn');
       btn.disabled = false;
-      return;
     }
-
-    // Save token and user
-   saveToken(data.token);
-localStorage.setItem('sn_user', JSON.stringify({
-  ...data.user,
-  trustScore: data.user.trustScore
-}));
-showToast('Login successful! 🎉', 'success');
-// Check if profile is complete
-setTimeout(() => {
-  if (data.profileComplete) {
-    window.location.href = 'dashboard.html';
-  } else {
-    window.location.href = 'setup.html';
   }
-}, 1000);
 
-  } catch (err) {
-    showToast('Cannot connect to server. Is it running?', 'error');
-    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Log In to SkillNova';
-    btn.disabled = false;
+  document.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleLogin(); });
+
+  // Handle Google error redirect
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('error') === 'google_failed') {
+    showToast('Google login failed. Please try again.', 'error');
   }
-}
-
-  // Allow Enter key to submit
-  document.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleLogin();
-  });
 </script>
 </body>
 </html>

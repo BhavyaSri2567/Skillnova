@@ -7,112 +7,48 @@
   <link rel="stylesheet" href="style.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
-    .step-indicator {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      margin-bottom: 2rem;
-    }
-    .step {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex: 1;
-    }
-    .step-num {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      background: var(--border);
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      font-weight: 700;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      transition: var(--transition);
-    }
-    .step.active .step-num {
-      background: var(--primary);
-      color: white;
-    }
-    .step.done .step-num {
-      background: var(--success);
-      color: white;
-    }
-    .step-label {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      transition: var(--transition);
-    }
-    .step.active .step-label { color: var(--primary); }
-    .step.done .step-label { color: var(--success); }
-    .step-line {
-      flex: 1;
-      height: 2px;
-      background: var(--border);
-      margin: 0 8px;
-      transition: var(--transition);
-    }
-    .step-line.done { background: var(--success); }
-
-    .form-step { display: none; }
-    .form-step.active { display: block; }
-
-    .skills-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-    }
-    .skill-tag {
-      padding: 6px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: 50px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text);
-      cursor: pointer;
-      transition: var(--transition);
-      background: white;
-    }
-    .skill-tag:hover, .skill-tag.selected {
-      background: var(--primary-light);
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .strength-bar {
-      height: 4px;
-      border-radius: 10px;
-      background: var(--border);
-      margin-top: 6px;
-      overflow: hidden;
-    }
-    .strength-fill {
-      height: 100%;
-      border-radius: 10px;
-      transition: width 0.3s ease, background 0.3s ease;
-    }
-    .strength-text {
-      font-size: 0.78rem;
-      margin-top: 4px;
-    }
+    .step-indicator { display:flex; align-items:center; gap:0; margin-bottom:2rem; }
+    .step { display:flex; align-items:center; gap:8px; flex:1; }
+    .step-num { width:32px; height:32px; border-radius:50%; background:var(--border); color:var(--text-muted); font-size:0.85rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:var(--transition); }
+    .step.active .step-num { background:var(--primary); color:white; }
+    .step.done .step-num { background:var(--success); color:white; }
+    .step-label { font-size:0.78rem; font-weight:600; color:var(--text-muted); transition:var(--transition); }
+    .step.active .step-label { color:var(--primary); }
+    .step.done .step-label { color:var(--success); }
+    .step-line { flex:1; height:2px; background:var(--border); margin:0 8px; transition:var(--transition); }
+    .step-line.done { background:var(--success); }
+    .form-step { display:none; }
+    .form-step.active { display:block; }
+    .skills-grid { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+    .skill-tag { padding:6px 14px; border:1.5px solid var(--border); border-radius:50px; font-size:0.82rem; font-weight:600; color:var(--text); cursor:pointer; transition:var(--transition); background:white; }
+    .skill-tag:hover, .skill-tag.selected { background:var(--primary-light); border-color:var(--primary); color:var(--primary); }
+    .strength-bar { height:4px; border-radius:10px; background:var(--border); margin-top:6px; overflow:hidden; }
+    .strength-fill { height:100%; border-radius:10px; transition:width 0.3s ease, background 0.3s ease; }
+    .strength-text { font-size:0.78rem; margin-top:4px; }
   </style>
 </head>
 <body>
+
+<!-- NAVBAR -->
 <nav class="navbar" id="navbar" style="position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:70px;">
   <div class="nav-logo">
     <div class="nav-logo-icon">⚡</div>
     Skill<span>Nova</span>
   </div>
-  <button id="langToggle"
-    class="btn btn-outline"
-    style="padding:7px 14px;font-size:0.85rem"
-    onclick="SkillNovaLang.switch(SkillNovaLang.current==='en'?'te':'en')">
-    🌐 తెలుగు
-  </button>
+  <div style="display:flex;align-items:center;gap:10px">
+    <button id="langToggle"
+      class="btn btn-outline"
+      style="padding:7px 14px;font-size:0.82rem"
+      onclick="SkillNovaLang.switch(SkillNovaLang.current==='en'?'te':'en')">
+      🌐 తెలుగు
+    </button>
+    <a href="login.html" class="btn btn-outline" style="padding:7px 16px;font-size:0.85rem">
+      <span data-lang="login">Log In</span>
+    </a>
+  </div>
 </nav>
-<div class="auth-page"style="padding-top:70px">
+
+<div class="auth-page" style="padding-top:70px">
 
   <!-- LEFT PANEL -->
   <div class="auth-left">
@@ -124,22 +60,10 @@
       <h2>Join SkillNova Today!</h2>
       <p>Create your free account and start connecting with opportunities. It takes less than 2 minutes.</p>
       <div class="auth-features">
-        <div class="auth-feat-item">
-          <div class="feat-icon">✅</div>
-          <span>Free to join — no hidden fees</span>
-        </div>
-        <div class="auth-feat-item">
-          <div class="feat-icon">🤖</div>
-          <span>AI builds your Trust Score automatically</span>
-        </div>
-        <div class="auth-feat-item">
-          <div class="feat-icon">📍</div>
-          <span>Instant job alerts in your area</span>
-        </div>
-        <div class="auth-feat-item">
-          <div class="feat-icon">🔒</div>
-          <span>Safe, verified, and fraud-protected</span>
-        </div>
+        <div class="auth-feat-item"><div class="feat-icon">✅</div><span>Free to join — no hidden fees</span></div>
+        <div class="auth-feat-item"><div class="feat-icon">🤖</div><span>AI builds your Trust Score automatically</span></div>
+        <div class="auth-feat-item"><div class="feat-icon">📍</div><span>Instant job alerts in your area</span></div>
+        <div class="auth-feat-item"><div class="feat-icon">🔒</div><span>Safe, verified, and fraud-protected</span></div>
       </div>
     </div>
   </div>
@@ -153,68 +77,71 @@
         SkillNova
       </div>
 
-      <h1>Create Account</h1>
-      <p class="sub">Already have an account? <a href="login.html">Log in →</a></p>
+      <h1 data-lang="createAccount">Create Account</h1>
+      <p class="sub">
+        <span data-lang="alreadyHaveAccount">Already have an account?</span>
+        <a href="login.html" data-lang="loginArrow"> Log in →</a>
+      </p>
 
       <!-- Step Indicator -->
       <div class="step-indicator">
         <div class="step active" id="step-ind-1">
           <div class="step-num">1</div>
-          <span class="step-label">Role</span>
+          <span class="step-label" data-lang="role">Role</span>
         </div>
         <div class="step-line" id="line-1"></div>
         <div class="step" id="step-ind-2">
           <div class="step-num">2</div>
-          <span class="step-label">Info</span>
+          <span class="step-label" data-lang="info">Info</span>
         </div>
         <div class="step-line" id="line-2"></div>
         <div class="step" id="step-ind-3">
           <div class="step-num">3</div>
-          <span class="step-label">Skills</span>
+          <span class="step-label" data-lang="skills">Skills</span>
         </div>
         <div class="step-line" id="line-3"></div>
         <div class="step" id="step-ind-4">
           <div class="step-num">4</div>
-          <span class="step-label">Done</span>
+          <span class="step-label" data-lang="done">Done</span>
         </div>
       </div>
 
-      <!-- ===== STEP 1: ROLE ===== -->
+      <!-- STEP 1: ROLE -->
       <div class="form-step active" id="step1">
-        <p style="font-size:0.9rem;color:var(--text-light);margin-bottom:1.2rem">I want to join as a...</p>
+        <p style="font-size:0.9rem;color:var(--text-light);margin-bottom:1.2rem" data-lang="iWantToJoinAs">I want to join as a...</p>
         <div class="role-selector" style="grid-template-columns:1fr 1fr">
           <label class="role-card selected" id="regRoleWorker">
             <input type="radio" name="regRole" value="worker" checked/>
             <span class="role-icon">👷</span>
-            <span class="role-name">Worker</span>
-            <span class="role-desc">I want to find jobs & earn money</span>
+            <span class="role-name" data-lang="worker">Worker</span>
+            <span class="role-desc" data-lang="findJobsEarnMoney">I want to find jobs & earn money</span>
           </label>
           <label class="role-card" id="regRoleEmployer">
             <input type="radio" name="regRole" value="employer"/>
             <span class="role-icon">🧑‍💼</span>
-            <span class="role-name">Employer</span>
-            <span class="role-desc">I want to post jobs & hire workers</span>
+            <span class="role-name" data-lang="employer">Employer</span>
+            <span class="role-desc" data-lang="postJobsHire">I want to post jobs & hire workers</span>
           </label>
         </div>
         <button class="btn btn-primary btn-full btn-lg" style="margin-top:1rem" onclick="goToStep(2)">
-          Continue <i class="fas fa-arrow-right"></i>
+          <span data-lang="continueBtn">Continue</span> <i class="fas fa-arrow-right"></i>
         </button>
       </div>
 
-      <!-- ===== STEP 2: BASIC INFO ===== -->
+      <!-- STEP 2: INFO -->
       <div class="form-step" id="step2">
         <div class="form-group">
-          <label>Full Name</label>
+          <label data-lang="fullName">Full Name</label>
           <div class="input-wrap">
             <i class="fas fa-user icon"></i>
-            <input type="text" id="regName" placeholder="e.g. Ravi Kumar"/>
+            <input type="text" id="regName" data-lang="namePlaceholder" placeholder="e.g. Ravi Kumar"/>
           </div>
         </div>
         <div class="form-group">
-          <label>Mobile Number</label>
+          <label data-lang="mobileNumber">Mobile Number</label>
           <div class="input-wrap">
             <i class="fas fa-phone icon"></i>
-            <input type="tel" id="regPhone" placeholder="10-digit mobile number"/>
+            <input type="tel" id="regPhone" data-lang="phonePlaceholder" placeholder="10-digit mobile number"/>
           </div>
         </div>
         <div class="form-group">
@@ -225,86 +152,75 @@
           </div>
         </div>
         <div class="form-group">
-          <label>Location (City / Village)</label>
+          <label data-lang="location">Location</label>
           <div class="input-wrap">
             <i class="fas fa-map-marker-alt icon"></i>
-            <input type="text" id="regLocation" placeholder="e.g. Madurai, Tamil Nadu"/>
+            <input type="text" id="regLocation" data-lang="locationPlaceholder" placeholder="e.g. Madurai, Tamil Nadu"/>
           </div>
         </div>
         <div class="form-group">
-          <label>Password</label>
+          <label data-lang="password">Password</label>
           <div class="input-wrap">
             <i class="fas fa-lock icon"></i>
             <input type="password" id="regPassword" placeholder="Min 6 characters" oninput="checkPasswordStrength(this.value)"/>
-            <button class="eye-btn" onclick="togglePassword('regPassword', this)">
-              <i class="fas fa-eye"></i>
-            </button>
+            <button class="eye-btn" onclick="togglePassword('regPassword', this)"><i class="fas fa-eye"></i></button>
           </div>
-          <div class="strength-bar">
-            <div class="strength-fill" id="strengthFill" style="width:0%"></div>
-          </div>
+          <div class="strength-bar"><div class="strength-fill" id="strengthFill" style="width:0%"></div></div>
           <div class="strength-text" id="strengthText" style="color:var(--text-muted)">Enter a password</div>
         </div>
         <div style="display:flex;gap:10px">
           <button class="btn btn-outline btn-full" onclick="goToStep(1)">
-            <i class="fas fa-arrow-left"></i> Back
+            <i class="fas fa-arrow-left"></i> <span data-lang="backBtn">Back</span>
           </button>
           <button class="btn btn-primary btn-full" onclick="goToStep(3)">
-            Continue <i class="fas fa-arrow-right"></i>
+            <span data-lang="continueBtn">Continue</span> <i class="fas fa-arrow-right"></i>
           </button>
         </div>
       </div>
 
-      <!-- ===== STEP 3: SKILLS ===== -->
+      <!-- STEP 3: SKILLS -->
       <div class="form-step" id="step3">
         <p style="font-size:0.9rem;color:var(--text-light);margin-bottom:1rem" id="skillsLabel">
-          Select your <strong>skills</strong> (choose all that apply):
+          Select your <strong data-lang="skills">skills</strong>:
         </p>
-        <div class="skills-grid" id="skillsGrid">
-          <!-- Injected by JS -->
-        </div>
+        <div class="skills-grid" id="skillsGrid"></div>
         <div class="form-group" style="margin-top:1.2rem">
-          <label>Daily Rate / Pricing (₹)</label>
+          <label data-lang="dailyRate">Daily Rate / Pricing (₹)</label>
           <div class="input-wrap">
             <i class="fas fa-rupee-sign icon"></i>
-            <input type="number" id="regRate" placeholder="e.g. 500 per day"/>
+            <input type="number" id="regRate" data-lang="ratePlaceholder" placeholder="e.g. 500 per day"/>
           </div>
         </div>
         <div class="form-check" style="margin:1rem 0">
           <input type="checkbox" id="agreeTerms"/>
-          <label for="agreeTerms">I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a></label>
+          <label for="agreeTerms">
+            <span data-lang="agreeTerms">I agree to the</span>
+            <a href="#" data-lang="terms">Terms</a>
+            <span data-lang="and">and</span>
+            <a href="#" data-lang="privacyPolicy">Privacy Policy</a>
+          </label>
         </div>
         <div style="display:flex;gap:10px">
           <button class="btn btn-outline btn-full" onclick="goToStep(2)">
-            <i class="fas fa-arrow-left"></i> Back
+            <i class="fas fa-arrow-left"></i> <span data-lang="backBtn">Back</span>
           </button>
           <button class="btn btn-primary btn-full" id="registerBtn" onclick="handleRegister()">
-            <i class="fas fa-check"></i> Create Account
+            <i class="fas fa-check"></i> <span data-lang="createAccountBtn">Create Account</span>
           </button>
         </div>
       </div>
 
-      <!-- ===== STEP 4: SUCCESS ===== -->
+      <!-- STEP 4: SUCCESS -->
       <div class="form-step" id="step4" style="text-align:center;padding:20px 0">
         <div style="font-size:4rem;margin-bottom:16px">🎉</div>
         <h2 style="font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--dark);margin-bottom:8px">
           Welcome to SkillNova!
         </h2>
         <p style="color:var(--text-light);margin-bottom:2rem">
-          Your account has been created successfully. Your AI Trust Score is being calculated...
+          Account created! Let's complete your profile to get started.
         </p>
-        <div style="background:var(--primary-light);border-radius:var(--radius);padding:20px;margin-bottom:2rem;text-align:left">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-            <span style="font-size:1.2rem">🤖</span>
-            <strong style="font-size:0.9rem">AI Verification in Progress</strong>
-          </div>
-          <div class="trust-bar" style="height:8px;margin-bottom:8px">
-            <div class="trust-fill" style="width:72%;background:linear-gradient(90deg,var(--primary),var(--success))"></div>
-          </div>
-          <p style="font-size:0.82rem;color:var(--text-light)">Initial Trust Score: <strong style="color:var(--success)">72 / 100</strong> — Keep completing your profile to increase it!</p>
-        </div>
-        <a href="dashboard.html" class="btn btn-primary btn-full btn-lg">
-          <i class="fas fa-rocket"></i> Go to My Dashboard
+        <a href="setup.html" class="btn btn-primary btn-full btn-lg">
+          <i class="fas fa-rocket"></i> Complete Your Profile
         </a>
       </div>
 
@@ -318,11 +234,9 @@
 <script>
   let currentStep = 1;
   let selectedSkills = [];
-
   const workerSkills = ['Plumber 🔧','Electrician ⚡','Carpenter 🪚','Painter 🎨','Welder 🔥','Mason 🧱','Driver 🚗','Mechanic 🔩','Gardener 🌿','Cook 👨‍🍳','Security Guard 💂','Cleaner 🧹','Tailor ✂️','Delivery 📦','Other ➕'];
   const employerNeeds = ['Home Repair 🏠','Construction 🏗️','Cleaning 🧹','Cooking 👨‍🍳','Driving 🚗','Security 💂','Electrical ⚡','Plumbing 🔧','Gardening 🌿','Delivery 📦','Event Help 🎉','Office Help 🖥️','Other ➕'];
 
-  // Role card selection
   document.querySelectorAll('.role-card').forEach(card => {
     card.addEventListener('click', () => {
       document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
@@ -331,7 +245,6 @@
   });
 
   function goToStep(step) {
-    // Validate step 2
     if (step === 3 && currentStep === 2) {
       const name = document.getElementById('regName').value.trim();
       const phone = document.getElementById('regPhone').value.trim();
@@ -339,19 +252,15 @@
       const location = document.getElementById('regLocation').value.trim();
       const password = document.getElementById('regPassword').value.trim();
       if (!name) { showToast('Please enter your full name', 'error'); return; }
-      if (!phone || phone.length < 10) { showToast('Please enter a valid 10-digit phone number', 'error'); return; }
+      if (!phone || phone.length < 10) { showToast('Please enter a valid phone number', 'error'); return; }
       if (!email) { showToast('Please enter your email', 'error'); return; }
       if (!location) { showToast('Please enter your location', 'error'); return; }
       if (!password || password.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
     }
-
-    // Hide all steps
     document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
     document.getElementById('step' + step).classList.add('active');
     currentStep = step;
     updateStepIndicator(step);
-
-    // Load skills grid on step 3
     if (step === 3) loadSkillsGrid();
   }
 
@@ -363,31 +272,24 @@
       else if (i === active) ind.classList.add('active');
     }
     for (let i = 1; i <= 3; i++) {
-      const line = document.getElementById('line-' + i);
-      line.classList.toggle('done', i < active);
+      document.getElementById('line-' + i).classList.toggle('done', i < active);
     }
   }
 
   function loadSkillsGrid() {
     const role = document.querySelector('input[name="regRole"]:checked').value;
     const skills = role === 'worker' ? workerSkills : employerNeeds;
-    const label = document.getElementById('skillsLabel');
-    label.innerHTML = role === 'worker'
-      ? 'Select your <strong>skills</strong> (choose all that apply):'
-      : 'What kind of work do you <strong>need help with</strong>?';
     const grid = document.getElementById('skillsGrid');
     grid.innerHTML = '';
+    selectedSkills = [];
     skills.forEach(skill => {
       const tag = document.createElement('div');
       tag.className = 'skill-tag';
       tag.textContent = skill;
       tag.onclick = () => {
         tag.classList.toggle('selected');
-        if (tag.classList.contains('selected')) {
-          selectedSkills.push(skill);
-        } else {
-          selectedSkills = selectedSkills.filter(s => s !== skill);
-        }
+        if (tag.classList.contains('selected')) selectedSkills.push(skill);
+        else selectedSkills = selectedSkills.filter(s => s !== skill);
       };
       grid.appendChild(tag);
     });
@@ -396,7 +298,7 @@
   function checkPasswordStrength(val) {
     const fill = document.getElementById('strengthFill');
     const text = document.getElementById('strengthText');
-    if (!val) { fill.style.width = '0%'; text.textContent = 'Enter a password'; text.style.color = 'var(--text-muted)'; return; }
+    if (!val) { fill.style.width = '0%'; text.textContent = 'Enter a password'; return; }
     let score = 0;
     if (val.length >= 6) score++;
     if (val.length >= 10) score++;
@@ -404,11 +306,11 @@
     if (/[0-9]/.test(val)) score++;
     if (/[^A-Za-z0-9]/.test(val)) score++;
     const levels = [
-      { pct: '20%', color: '#ef4444', label: 'Very Weak' },
-      { pct: '40%', color: '#f59e0b', label: 'Weak' },
-      { pct: '60%', color: '#f59e0b', label: 'Fair' },
-      { pct: '80%', color: '#10b981', label: 'Strong' },
-      { pct: '100%', color: '#10b981', label: '💪 Very Strong' },
+      { pct:'20%', color:'#ef4444', label:'Very Weak' },
+      { pct:'40%', color:'#f59e0b', label:'Weak' },
+      { pct:'60%', color:'#f59e0b', label:'Fair' },
+      { pct:'80%', color:'#10b981', label:'Strong' },
+      { pct:'100%', color:'#10b981', label:'💪 Very Strong' },
     ];
     const l = levels[Math.min(score, 4)];
     fill.style.width = l.pct;
@@ -417,52 +319,52 @@
     text.style.color = l.color;
   }
 
-async function handleRegister() {
-  if (selectedSkills.length === 0) { showToast('Please select at least one skill', 'error'); return; }
-  if (!document.getElementById('agreeTerms').checked) { showToast('Please agree to Terms', 'error'); return; }
+  async function handleRegister() {
+    if (selectedSkills.length === 0) { showToast('Please select at least one skill', 'error'); return; }
+    if (!document.getElementById('agreeTerms').checked) { showToast('Please agree to Terms and Privacy Policy', 'error'); return; }
 
-  const btn = document.getElementById('registerBtn');
-  btn.innerHTML = '<span class="spinner"></span> Creating Account...';
-  btn.disabled = true;
+    const btn = document.getElementById('registerBtn');
+    btn.innerHTML = '<span class="spinner"></span> Creating...';
+    btn.disabled = true;
 
-  const userData = {
-    name: document.getElementById('regName').value,
-    phone: document.getElementById('regPhone').value,
-    email: document.getElementById('regEmail').value,
-    location: document.getElementById('regLocation').value,
-    password: document.getElementById('regPassword').value,
-    role: document.querySelector('input[name="regRole"]:checked').value,
-    skills: selectedSkills,
-    rate: document.getElementById('regRate').value
-  };
+    const userData = {
+      name: document.getElementById('regName').value,
+      phone: document.getElementById('regPhone').value,
+      email: document.getElementById('regEmail').value,
+      location: document.getElementById('regLocation').value,
+      password: document.getElementById('regPassword').value,
+      role: document.querySelector('input[name="regRole"]:checked').value,
+      skills: selectedSkills,
+      rate: document.getElementById('regRate').value
+    };
 
-  try {
-    const data = await apiCall('/api/register', 'POST', userData);
-
-    if (data.error) {
-      showToast(data.error, 'error');
+    try {
+      const data = await apiCall('/api/register', 'POST', userData);
+      if (data.error) {
+        showToast(data.error, 'error');
+        btn.innerHTML = '<i class="fas fa-check"></i> Create Account';
+        btn.disabled = false;
+        return;
+      }
+      saveToken(data.token);
+      localStorage.setItem('sn_user', JSON.stringify({ ...data.user, trustScore: data.user.trustScore }));
+      showToast('Account created! 🎉', 'success');
+      goToStep(4);
+    } catch (err) {
+      showToast('Cannot connect to server.', 'error');
       btn.innerHTML = '<i class="fas fa-check"></i> Create Account';
       btn.disabled = false;
-      return;
     }
-
-    // Save token and user
-    saveToken(data.token);
-    localStorage.setItem('sn_user', JSON.stringify({
-      ...data.user,
-      trustScore: data.user.trustScore
-    }));
-
-   showToast('Account created! Welcome to SkillNova 🎉', 'success');
-// Always go to setup after fresh registration
-setTimeout(() => window.location.href = 'setup.html', 1200);
-
-  } catch (err) {
-    showToast('Cannot connect to server. Is it running?', 'error');
-    btn.innerHTML = '<i class="fas fa-check"></i> Create Account';
-    btn.disabled = false;
   }
-}
+
+  // Auto-select employer if ?role=employer
+  const role = getParam('role');
+  if (role === 'employer') {
+    document.getElementById('regRoleWorker')?.classList.remove('selected');
+    document.getElementById('regRoleEmployer')?.classList.add('selected');
+    const empRadio = document.querySelector('input[value="employer"]');
+    if (empRadio) empRadio.checked = true;
+  }
 </script>
 </body>
 </html>
